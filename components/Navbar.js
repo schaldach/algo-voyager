@@ -6,7 +6,7 @@ function NavBar() {
     return (
         <div className="navbar">
             <Link href='/'><div onClick={() => changePage('introduction')} className={selectedPage==='introduction'?'selectednav':''}>Introdução</div></Link>
-            <Link href='/sorting'><div onClick={() => changePage('sorting')} className={selectedPage==='sorting'?'selectednav':''}></div>Sorting</Link>
+            <Link href='/sorting'><div onClick={() => changePage('sorting')} className={selectedPage==='sorting'?'selectednav':''}>Sorting</div></Link>
             <Link href='/pathfinding'><div onClick={() => changePage('pathfinding')} className={selectedPage==='pathfinding'?'selectednav':''}>Path Finding</div></Link>
         </div>
     );
