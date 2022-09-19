@@ -2,14 +2,16 @@
 
 :root{
   --color1: #000000;
-  --color2p: #ffffff;
+  --color2: #efefef;
+  --color3: #ffffff;
   --color4: #0AA1DD;
   --color5: #2155CD;
   --font1: 'Poppins', sans-serif;
 }
 [data-theme='dark'] {
   --color1: #ffffff;
-  --color2p: #212426;
+  --color2: #4d4d4d;
+  --color3: #212426;
   --color4: #8E2DE2;
   --color5: #440c85;
   --font1: 'Poppins', sans-serif;
@@ -48,9 +50,13 @@ html,body {
 }
 .algobars>div{
   width: 100%;
-  background-color: #dadada;
+  height: 80%;
+  background-color: var(--color2);
+}
+.algobars>div>div{
+  width: 100%;
 }
 
 .title{
-
+  font-family: var(--font1);
 }
