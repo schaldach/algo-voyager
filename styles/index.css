@@ -6,6 +6,7 @@
   --color3: #ffffff;
   --color4: #0AA1DD;
   --color5: #2155CD;
+  --color6: #d2042d;
   --font1: 'Poppins', sans-serif;
 }
 [data-theme='dark'] {
@@ -14,17 +15,20 @@
   --color3: #212426;
   --color4: #8E2DE2;
   --color5: #440c85;
+  --color6: #d2042d;
   --font1: 'Poppins', sans-serif;
 }
 
 html,body {
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
+  background-color: var(--color3);
 }
 
 .pagelayout{
   display: grid;
-  grid-template-rows: 100px 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 100vw;
 }
 
@@ -33,14 +37,13 @@ html,body {
   flex-wrap: wrap;
   align-items: center;
   gap: 25px;
-  padding: 25px 75px;
+  padding: 20px 75px;
   color: var(--color1);
 }
 .navbar>.selectednav{
   border-bottom: 3px solid var(--color5);
 }
 .navbar>div{
-  height: 100%;
   display: grid;
   cursor: pointer;
   place-items: center;
@@ -58,21 +61,53 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 15px;
   height: 100%;
 }
+.sorting>input{
+  font-family: var(--font1);
+  font-size: 18px;
+  border: 2px solid var(--color2);
+  padding: 5px 10px;
+  width: 125px;
+  border-radius: 10px;
+  outline: none;
+}
+.sorting>input:focus{
+  border: 2px solid var(--color4);
+}
+.algotitle{
+  font-family: var(--font1);
+  font-size: 30px;
+}
 .algobars{
-  height: calc(80vh - 100px);
-  width: 75vw;
+  height: 52.5vh;
+  width: 90vw;
   display: grid;
   align-items: flex-end;
-  gap: 5px;
+  gap: 1px;
 }
 .algobars>div{
   width: 100%;
   background-color: var(--color4);
 }
-
+.algobuttons{
+  display: flex;
+  gap: 25px;
+}
+.algobuttons>button{
+  background-color: var(--color4);
+  color: #ffffff;
+  font-family: var(--font1);
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  padding: 8px 16px;
+}
+.algobuttons>button:hover{
+  background-color: var(--color5);
+}
 .title{
   font-family: var(--font1);
 }
