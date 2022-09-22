@@ -8,7 +8,7 @@ function Sorting() {
 
     useEffect(() => {
         let newArray = []
-        for(let x=1; x<=1024; x++){
+        for(let x=1; x<=512; x++){
             newArray.push({n:x, color:'blue'})
         }
         newArray = shuffleArray(newArray)
@@ -62,12 +62,12 @@ function Sorting() {
         changeArray(newArray)
     }
 
-    function mergeSort(array){
+    async function mergeSort(array){
         if(array.length<=1){return array}
         let leftSide = array.slice(0, Math.ceil(array.length/2))
         let rightSide = array.slice(Math.ceil(array.length/2), array.length)
-        if(!isSorted(leftSide)){leftSide = mergeSort(leftSide)}
-        if(!isSorted(rightSide)){rightSide = mergeSort(rightSide)}
+        if(!isSorted(leftSide)){leftSide = await mergeSort(leftSide)}
+        if(!isSorted(rightSide)){rightSide = await mergeSort(rightSide)}
         let newArray = leftSide.concat(rightSide)
         let arrayCounter = 0
         let rightoverflow = false
@@ -86,6 +86,7 @@ function Sorting() {
                 if(rightcounter===rightSide.length-1){rightoverflow=true}
                 else{rightcounter++}
             }
+            await new Promise(r => setTimeout(r, 128/sortedArray.length))
             arrayCounter++
         }
         return newArray
@@ -98,7 +99,7 @@ function Sorting() {
                 {sortedArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/sortedArray.length)+'%', backgroundColor:counter.color==='blue'?'var(--color4)':'var(--color6)'}}></div>)}
             </div>
             <div className="algobuttons">
-                <button onClick={() => changeArray(mergeSort(sortedArray))}>Ordenar</button>
+                <button onClick={async () => changeArray(await mergeSort(sortedArray))}>Ordenar</button>
                 <button onClick={() => changeArray(shuffleArray(sortedArray))}>Embaralhar</button>
             </div>
             <input placeholder="Length" type='number' value={sortedArray.length?sortedArray.length:''} onChange={e => scaleArray(e.target.value)}></input>
