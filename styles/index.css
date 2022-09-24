@@ -7,6 +7,7 @@
   --color4: #0AA1DD;
   --color5: #2155CD;
   --color6: #d2042d;
+  --color7: #a51633;
   --font1: 'Poppins', sans-serif;
 }
 [data-theme='dark'] {
@@ -16,6 +17,7 @@
   --color4: #8E2DE2;
   --color5: #440c85;
   --color6: #d2042d;
+  --color7: #a51633;
   --font1: 'Poppins', sans-serif;
 }
 
@@ -61,20 +63,22 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   height: 100%;
+  box-sizing: border-box;
+  padding-bottom: 25px;
 }
-.sorting>input{
+.algobuttons>input{
   font-family: var(--font1);
   font-size: 18px;
-  border: 2px solid var(--color2);
+  border: 2px solid var(--color4);
   padding: 5px 10px;
   width: 125px;
   border-radius: 10px;
   outline: none;
 }
-.sorting>input:focus{
-  border: 2px solid var(--color4);
+.algobuttons>input:focus{
+  border: 2px solid var(--color5);
 }
 .algotitle{
   font-family: var(--font1);
@@ -93,6 +97,9 @@ main{
 }
 .algobuttons{
   display: flex;
+  width: 90vw;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 25px;
 }
 .algobuttons>button{
@@ -108,6 +115,23 @@ main{
 .algobuttons>button:hover{
   background-color: var(--color5);
 }
+.algobuttons>.disabledbutton{
+  background-color: var(--color6);
+}
+.algobuttons>.disabledbutton:hover{
+  background-color: var(--color7);
+}
 .title{
   font-family: var(--font1);
+}
+.homescreen{
+  font-family: var(--font1);
+  font-size: 35px;
+  color: var(--color1);
+  height: 100%;
+  padding: 25px;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 25px;
 }
