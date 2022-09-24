@@ -18,6 +18,7 @@ function Sorting() {
     }, [])
 
     async function runAlgorithm(){
+        if(animationRunning){return}
         startAnimation(true)
         switch(currentAlgo){
             case 'Merge Sort':
@@ -25,6 +26,15 @@ function Sorting() {
                 break
             case 'Selection Sort':
                 selectionSort(currentArray)
+                break
+            case 'Quick Sort':
+                quickSort(currentArray, true)
+                break
+            case 'Bubble Sort':
+                bubbleSort(currentArray)
+                break
+            case 'Insertion Sort':
+                insertionSort(currentArray)
                 break
         }
     }
@@ -62,7 +72,7 @@ function Sorting() {
         return true
     }
 
-    function visualizeArray(indexes, swapmode){
+    function visualizeArray(indexes, swapmode, quickmode, quickright){
         let newArray = stateRef.current
         newArray = newArray.map(({n}) => ({n:n, color:'blue'}))
         const index0 = newArray.findIndex(c => c.n === indexes[0])
@@ -73,7 +83,10 @@ function Sorting() {
             if(swapmode){
                 newArray[index0].n = indexes[1]
                 newArray[index1].n = indexes[0]
-                console.log('oi', indexes[0], indexes[1])
+            }
+            else if(quickmode){
+                newArray.splice(index0, 1)
+                newArray.splice(index1-1+quickright, 0, {n:indexes[0], color:'red'})
             }
             else{
                 newArray.splice(index1, 1)
@@ -83,10 +96,64 @@ function Sorting() {
         changeArray(newArray)
     }
 
+    async function insertionSort(array){
+        if(array.length<=1){return array}
+        let sortedArray = array
+        let subArray = []
+        for(let i=0; i<sortedArray.length-1; i++){
+            visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
+            await new Promise(r => setTimeout(r, 1))
+            if(sortedArray[i+1].n<sortedArray[i].n){
+                let v = sortedArray[i]
+                sortedArray[i] = sortedArray[i+1]
+                sortedArray[i+1] = v
+            }
+            subArray.push(sortedArray[i])
+            if(!isSorted(subArray)){
+                loop:
+                for(let y=subArray.length-1; y>0; y--){
+                    visualizeArray([sortedArray[y-1].n, sortedArray[y].n])
+                    await new Promise(r => setTimeout(r, 1))
+                    if(sortedArray[y].n<sortedArray[y-1].n){
+                        let v = sortedArray[y-1]
+                        sortedArray[y-1] = sortedArray[y]
+                        sortedArray[y] = v
+                    }
+                    else{break loop}
+                }
+            }
+        }
+        subArray.push(sortedArray[sortedArray.length-1])
+        console.log(subArray)
+        startAnimation(false)
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+    }
+
+    async function bubbleSort(array){
+        if(array.length<=1){return array}
+        let sortedArray = array
+        let arrayCap = sortedArray.length-1
+        while(!isSorted(sortedArray)){
+            for(let i=0; i<arrayCap; i++){
+                visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
+                if(sortedArray[i+1].n<sortedArray[i].n){
+                    let v = sortedArray[i+1].n
+                    sortedArray[i+1].n = sortedArray[i].n
+                    sortedArray[i].n = v
+                }
+                await new Promise(r => setTimeout(r, 1))
+            }
+            arrayCap--
+        }
+        startAnimation(false)
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+    }
+
     async function selectionSort(array){
         if(array.length<=1){return array}
         let sortedArray = array
         for(let i=0; i<sortedArray.length-1; i++){
+            await new Promise(r => setTimeout(r, 50))
             let lowestItem = sortedArray[i+1].n
             let lowestItemPosition = i+1
             for(let y=i+1; y<sortedArray.length; y++){
@@ -94,7 +161,7 @@ function Sorting() {
                     lowestItem = sortedArray[y].n
                     lowestItemPosition = y
                 }
-                await new Promise(r => setTimeout(r, 1))
+                
             }
             visualizeArray([sortedArray[i].n, lowestItem], true)
             if(lowestItem<sortedArray[i].n){
@@ -104,6 +171,33 @@ function Sorting() {
         }
         startAnimation(false)
         changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+    }
+
+    async function quickSort(array, rootArray){
+        if(array.length<=1){return array}
+        let pivot = array[array.length-1]
+        console.log(pivot)
+        let leftSide = []
+        let rightSide = []
+        for(let i=0; i<array.length-1; i++){
+            if(array[i].n<pivot.n){
+                leftSide.push(array[i])
+            }
+            else{
+                rightSide.push(array[i])
+            }
+            visualizeArray([array[i].n, pivot.n], false, true, rightSide.length)
+            await new Promise(r => setTimeout(r, 1))
+        }
+        if(!isSorted(leftSide)){leftSide = await quickSort(leftSide)}
+        if(!isSorted(rightSide)){rightSide = await quickSort(rightSide)}
+        leftSide.push(pivot)
+        let sortedArray = leftSide.concat(rightSide)
+        if(rootArray){
+            startAnimation(false)
+            changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+        }
+        return sortedArray
     }
 
     async function mergeSort(array, rootArray){
@@ -119,7 +213,7 @@ function Sorting() {
         let leftoverflow = false
         let leftcounter = 0
         while(arrayCounter<sortedArray.length){
-            if(!leftoverflow&&!rightoverflow){visualizeArray([leftSide[leftcounter].n, rightSide[rightcounter].n], false)}
+            if(!leftoverflow&&!rightoverflow){visualizeArray([leftSide[leftcounter].n, rightSide[rightcounter].n])}
             if(rightoverflow||!leftoverflow&&leftSide[leftcounter].n<rightSide[rightcounter].n){
                 sortedArray[arrayCounter] = leftSide[leftcounter]
                 if(leftcounter===leftSide.length-1){leftoverflow=true}
@@ -145,6 +239,9 @@ function Sorting() {
             <select onChange={e => changeAlgo(e.target.value)}>
                 <option defaultValue value='Merge Sort'>Merge Sort</option>
                 <option value='Selection Sort'>Selection Sort</option>
+                <option value='Quick Sort'>Quick Sort</option>
+                <option value='Bubble Sort'>Bubble Sort</option>
+                <option value='Insertion Sort'>Insertion Sort</option>
             </select>
             <div className="algotitle">{currentAlgo}</div>
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
