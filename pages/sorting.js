@@ -58,9 +58,9 @@ function Sorting() {
 
     function shuffleArray(array){
         let shuffled = array
-            .map(value => ({ value, sort: Math.random() }))
+            .map(value => ({ n:value.n, sort: Math.random() }))
             .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
+            .map(({ n }) => ({n:n, color:'blue'}))
         return shuffled
     }
 
@@ -101,9 +101,9 @@ function Sorting() {
         let sortedArray = array
         let subArray = []
         for(let i=0; i<sortedArray.length-1; i++){
-            visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
-            await new Promise(r => setTimeout(r, 1))
             if(sortedArray[i+1].n<sortedArray[i].n){
+                visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
+                await new Promise(r => setTimeout(r, 1))
                 let v = sortedArray[i]
                 sortedArray[i] = sortedArray[i+1]
                 sortedArray[i+1] = v
@@ -112,9 +112,9 @@ function Sorting() {
             if(!isSorted(subArray)){
                 loop:
                 for(let y=subArray.length-1; y>0; y--){
-                    visualizeArray([sortedArray[y-1].n, sortedArray[y].n])
-                    await new Promise(r => setTimeout(r, 1))
                     if(sortedArray[y].n<sortedArray[y-1].n){
+                        visualizeArray([sortedArray[y-1].n, sortedArray[y].n])
+                        await new Promise(r => setTimeout(r, 1))
                         let v = sortedArray[y-1]
                         sortedArray[y-1] = sortedArray[y]
                         sortedArray[y] = v
@@ -124,9 +124,8 @@ function Sorting() {
             }
         }
         subArray.push(sortedArray[sortedArray.length-1])
-        console.log(subArray)
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
     }
 
     async function bubbleSort(array){
@@ -137,16 +136,17 @@ function Sorting() {
             for(let i=0; i<arrayCap; i++){
                 visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
                 if(sortedArray[i+1].n<sortedArray[i].n){
+                    visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
+                    await new Promise(r => setTimeout(r, 1))
                     let v = sortedArray[i+1].n
                     sortedArray[i+1].n = sortedArray[i].n
                     sortedArray[i].n = v
                 }
-                await new Promise(r => setTimeout(r, 1))
             }
             arrayCap--
         }
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
     }
 
     async function selectionSort(array){
@@ -170,13 +170,12 @@ function Sorting() {
             }
         }
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
     }
 
     async function quickSort(array, rootArray){
         if(array.length<=1){return array}
         let pivot = array[array.length-1]
-        console.log(pivot)
         let leftSide = []
         let rightSide = []
         for(let i=0; i<array.length-1; i++){
@@ -195,7 +194,7 @@ function Sorting() {
         let sortedArray = leftSide.concat(rightSide)
         if(rootArray){
             startAnimation(false)
-            changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+            changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
         }
         return sortedArray
     }
@@ -229,7 +228,7 @@ function Sorting() {
         }
         if(rootArray){
             startAnimation(false)
-            changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
+            changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
         }
         return sortedArray
     }
@@ -245,7 +244,7 @@ function Sorting() {
             </select>
             <div className="algotitle">{currentAlgo}</div>
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
-                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', backgroundColor:counter.color==='blue'?'var(--color4)':'var(--color6)'}}></div>)}
+                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', backgroundColor:counter.color==='blue'?'var(--color4)':counter.color==='green'?'var(--color8)':'var(--color6)'}}></div>)}
             </div>
             <div className="algobuttons">
                 <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
