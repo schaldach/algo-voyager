@@ -157,9 +157,12 @@ main{
   box-sizing: border-box;
   border: 1px solid var(--color1);
 }
-.target{
+.algomap>div>.target{
   background-color: var(--color6);
 }
-.start{
+.algomap>div>.filled{
   background-color: var(--color4);
+}
+.algomap>div>.start{
+  background-color: var(--color5);
 }
