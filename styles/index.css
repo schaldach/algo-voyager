@@ -8,7 +8,8 @@
   --color5: #2155CD;
   --color6: #d2042d;
   --color7: #a51633;
-  --color8: #2bb3a5;
+  --color8: #c1ff1c;
+  --color9: #58bb43;
   --font1: 'Poppins', sans-serif;
 }
 [data-theme='dark'] {
@@ -19,7 +20,8 @@
   --color5: #440c85;
   --color6: #d2042d;
   --color7: #a51633;
-  --color8: #2bb3a5;
+  --color8: #c1ff1c;
+  --color9: #58bb43;
   --font1: 'Poppins', sans-serif;
 }
 
@@ -95,7 +97,6 @@ main{
 }
 .algobars>div{
   width: 100%;
-  background-color: var(--color4);
 }
 .algobuttons{
   display: flex;

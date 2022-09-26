@@ -244,7 +244,7 @@ function Sorting() {
             </select>
             <div className="algotitle">{currentAlgo}</div>
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
-                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', backgroundColor:counter.color==='blue'?'var(--color4)':counter.color==='green'?'var(--color8)':'var(--color6)'}}></div>)}
+                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', background:`linear-gradient(to top, ${counter.color==='blue'?'var(--color4), var(--color5))':counter.color==='green'?'var(--color8), var(--color9))':'var(--color6), var(--color7))'}`}}></div>)}
             </div>
             <div className="algobuttons">
                 <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
