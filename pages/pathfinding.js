@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
+import Router from 'next/router'
 
 function PathFinding() {
     const [currentAlgo, changeAlgo] = useState('A*')
     const [mapGrid, changeMap] = useState([])
+    const [animationRunning, startAnimation] = useState(false)
 
     useEffect(() => {
         let newMap = []
@@ -13,8 +15,12 @@ function PathFinding() {
             }
             newMap.push(subMap)
         }
+        newMap[2][5] = 'target'
+        newMap[8][1] = 'start'
         changeMap(newMap)
     }, [])
+
+    function runAlgorithm(){}
 
     return (
         <div className="sorting">
@@ -26,12 +32,13 @@ function PathFinding() {
                 {mapGrid.map(row =>
                     <div>
                     {row.map(cell => 
-                        <div className="cell"></div>
+                        <div className={cell}></div>
                     )}
                     </div>
                 )}
             </div>
             <div className="algobuttons">
+            <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
                 <button onClick={() => Router.reload()}>Resetar</button>
             </div>
         </div>

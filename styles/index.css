@@ -151,9 +151,15 @@ main{
   height: 5.25vh;
   width: calc(52.5vh * 3);
 }
-.cell{
+.algomap>div>div{
   width: 5.25vh;
   height: 5.25vh;
-  border: 1px solid var(--color1);
   box-sizing: border-box;
+  border: 1px solid var(--color1);
+}
+.target{
+  background-color: var(--color6);
+}
+.start{
+  background-color: var(--color4);
 }
