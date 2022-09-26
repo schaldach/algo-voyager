@@ -23,14 +23,47 @@ function PathFinding() {
         }
         newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
         newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
+        newMap[8][15].state = 'blocked'
+        newMap[7][15].state = 'blocked'
+        newMap[6][15].state = 'blocked'
+        newMap[5][15].state = 'blocked'
+        newMap[4][15].state = 'blocked'
+        newMap[3][15].state = 'blocked'
         changeMap(newMap)
     }
 
     function runAlgorithm(){
-        changeMap(dijkstraPath(mapGrid))
+        let newMap = []
+        for(let i=0; i<10; i++){
+            let subMap = []
+            for(let y=0; y<30; y++){
+                subMap.push({state:'empty', active:false, shortestPath:[]})
+            }
+            newMap.push(subMap)
+        }
+        newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
+        newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
+        newMap[8][15].state = 'blocked'
+        newMap[7][15].state = 'blocked'
+        newMap[6][15].state = 'blocked'
+        newMap[5][15].state = 'blocked'
+        newMap[4][15].state = 'blocked'
+        newMap[3][15].state = 'blocked'
+        console.log(newMap)
+        changeMap(newMap)
+        dijkstraPath(newMap)
     }
 
-    function dijkstraPath(map){
+    async function visualizeMap(newFilled){
+        let newMap = [...mapGrid]
+        newFilled.forEach(cell => {
+            newMap[cell.y][cell.x].state = 'filled'
+            newMap[cell.y][cell.x]['shortestPath'] = cell['shortestPath']
+        })
+        changeMap(newMap)
+    }
+
+    async function dijkstraPath(map){
         let newMap = [...map]
         let targetFound = false
         let targetPosition = {}
@@ -44,28 +77,28 @@ function PathFinding() {
                             newMap[y+1][x].state = 'filled'
                             newMap[y+1][x].active = false
                             newMap[y+1][x]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x, y:y+1})
+                            newCells.push({x:x, y:y+1, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
                         }
                         if(y>0&&newMap[y-1][x].state==='empty'){
                             if(newMap[y-1][x].target){targetFound = true; targetPosition = {x:x, y:y-1}}
                             newMap[y-1][x].state = 'filled'
                             newMap[y-1][x].active = false
                             newMap[y-1][x]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x, y:y-1})
+                            newCells.push({x:x, y:y-1, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
                         }
                         if(x<29&&newMap[y][x+1].state==='empty'){
                             if(newMap[y][x+1].target){targetFound = true; targetPosition = {x:x+1, y:y}}
                             newMap[y][x+1].state = 'filled'
                             newMap[y][x+1].active = false
                             newMap[y][x+1]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x+1, y:y})
+                            newCells.push({x:x+1, y:y, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
                         }
                         if(x>0&&newMap[y][x-1].state==='empty'){
                             if(newMap[y][x-1].target){targetFound = true; targetPosition = {x:x-1, y:y}}
                             newMap[y][x-1].state = 'filled'
                             newMap[y][x-1].active = false
                             newMap[y][x-1]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x-1, y:y})
+                            newCells.push({x:x-1, y:y, shortestPath:[{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
                         }
                         newMap[y][x].active = false
                     }
@@ -74,17 +107,19 @@ function PathFinding() {
             newCells.forEach(newCell => {
                 newMap[newCell.y][newCell.x].active = true
             })
+            visualizeMap(newCells)
+            await new Promise(r => setTimeout(r, 100))
         }
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
-                newMap[y][x].state = 'empty'
+                newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
             })
         })
         console.log(targetPosition.x, targetPosition.y, newMap[targetPosition.y][targetPosition.x]['shortestPath'])
         newMap[targetPosition.y][targetPosition.x]['shortestPath'].forEach(pathCell => {
             newMap[pathCell.y][pathCell.x].state = 'filled'
         })
-        return newMap
+        changeMap(newMap)
     }
 
     return (
@@ -98,7 +133,7 @@ function PathFinding() {
                 {mapGrid.map((row,index) =>
                     <div key={index}>
                     {row.map((cell, index) => 
-                        <div className={cell.target?'target':cell.start?'start':cell.state} key={index}></div>
+                        <div style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${cell['shortestPath'].length*10},60,200)`}} key={index}></div>
                     )}
                     </div>
                 )}

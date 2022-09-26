@@ -143,7 +143,6 @@ main{
   height: 52.5vh;
   width: calc(52.5vh * 3);
   border: 1px solid var(--color1);
-  box-sizing: border-box;
 }
 .algomap>div{
   display: flex;
@@ -156,13 +155,4 @@ main{
   height: 5.25vh;
   box-sizing: border-box;
   border: 1px solid var(--color1);
-}
-.algomap>div>.target{
-  background-color: var(--color6);
-}
-.algomap>div>.filled{
-  background-color: var(--color4);
-}
-.algomap>div>.start{
-  background-color: var(--color5);
 }
