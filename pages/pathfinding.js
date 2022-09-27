@@ -7,10 +7,12 @@ function PathFinding() {
     const [animationRunning, startAnimation] = useState(false)
     const [targetPosition, changeTarget] = useState({y:3, x:7})
     const [startPosition, changeStart] = useState({y:7, x:21})
+    const [currentObject, changeObject] = useState('barrier')
+    const [allBarriers, changeBarriers] = useState([])
 
     useEffect(() => {
         drawMap()
-    }, [targetPosition, startPosition])
+    }, [targetPosition, startPosition, allBarriers])
 
     function drawMap(){
         let newMap = []
@@ -21,35 +23,17 @@ function PathFinding() {
             }
             newMap.push(subMap)
         }
+        allBarriers.forEach(barrier => {
+            newMap[barrier.y][barrier.x].state = 'blocked'
+        })
         newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
         newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
-        newMap[8][15].state = 'blocked'
-        newMap[7][15].state = 'blocked'
-        newMap[6][15].state = 'blocked'
-        newMap[5][15].state = 'blocked'
-        newMap[4][15].state = 'blocked'
-        newMap[3][15].state = 'blocked'
         changeMap(newMap)
+        return(newMap)
     }
 
     function runAlgorithm(){
-        let newMap = []
-        for(let i=0; i<10; i++){
-            let subMap = []
-            for(let y=0; y<30; y++){
-                subMap.push({state:'empty', active:false, shortestPath:[]})
-            }
-            newMap.push(subMap)
-        }
-        newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
-        newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
-        newMap[8][15].state = 'blocked'
-        newMap[7][15].state = 'blocked'
-        newMap[6][15].state = 'blocked'
-        newMap[5][15].state = 'blocked'
-        newMap[4][15].state = 'blocked'
-        newMap[3][15].state = 'blocked'
-        console.log(newMap)
+        let newMap = [...mapGrid]
         changeMap(newMap)
         dijkstraPath(newMap)
     }
@@ -64,6 +48,7 @@ function PathFinding() {
     }
 
     async function dijkstraPath(map){
+        startAnimation(true)
         let newMap = [...map]
         let targetFound = false
         let targetPosition = {}
@@ -119,7 +104,38 @@ function PathFinding() {
         newMap[targetPosition.y][targetPosition.x]['shortestPath'].forEach(pathCell => {
             newMap[pathCell.y][pathCell.x].state = 'filled'
         })
+        startAnimation(false)
         changeMap(newMap)
+    }
+
+    function changeCell(cell){
+        let newMap = [...mapGrid]
+        switch(currentObject){
+            case 'barrier':
+                if(newMap[cell.y][cell.x].target||newMap[cell.y][cell.x].start){return}
+                let newBarriers = [...allBarriers]
+                const index = newBarriers.findIndex(innerCell => innerCell.x === cell.x && innerCell.y === cell.y)
+                console.log(index)
+                if(index===-1){newBarriers.push({x:cell.x, y:cell.y})}
+                else{newBarriers.splice(index, 1)}
+                console.log(newBarriers)
+                changeBarriers(newBarriers)
+                break
+            case 'start':
+                if(newMap[cell.y][cell.x].target||newMap[cell.y][cell.x].state==='blocked'){return}
+                let newStart = {x:cell.x, y:cell.y}
+                newMap[startPosition.y][startPosition.x].start = false
+                newMap[cell.y][cell.x].start = true
+                changeStart(newStart)
+                break
+            case 'target':
+                if(newMap[cell.y][cell.x].state==='blocked'||newMap[cell.y][cell.x].start){return}
+                let newTarget = {x:cell.x, y:cell.y}
+                newMap[targetPosition.y][targetPosition.x].target = false
+                newMap[cell.y][cell.x].target = true
+                changeTarget(newTarget)
+                break
+        }
     }
 
     return (
@@ -130,22 +146,23 @@ function PathFinding() {
             </select>
             <div className="algotitle">{currentAlgo}</div>
             <div className="algomap">
-                {mapGrid.map((row,index) =>
-                    <div key={index}>
-                    {row.map((cell, index) => 
-                        <div style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} key={index}></div>
+                {mapGrid.map((row,y) =>
+                    <div key={y}>
+                    {row.map((cell,x) => 
+                        <div onClick={() => changeCell({y:y, x:x})} style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} key={x}></div>
                     )}
                     </div>
                 )}
             </div>
             <div className="algobuttons">
-                <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
+                <button className={animationRunning?'disabledbutton':''} onClick={() => {if(!animationRunning){runAlgorithm()}}}>Navegar</button>
                 <button onClick={drawMap}>Limpar</button>
                 <button onClick={() => Router.reload()}>Resetar</button>
-                <input onChange={e => {if(e.target.value>=0&&e.target.value<=29){changeTarget({x:e.target.value, y:targetPosition.y})}}} type='number' value={targetPosition.x}></input>
-                <input onChange={e => {if(e.target.value>=0&&e.target.value<=9){changeTarget({y:e.target.value, x:targetPosition.x})}}} type='number' value={targetPosition.y}></input>
-                <input onChange={e => {if(e.target.value>=0&&e.target.value<=29){changeStart({x:e.target.value, y:startPosition.y})}}} type='number' value={startPosition.x}></input>
-                <input onChange={e => {if(e.target.value>=0&&e.target.value<=9){changeStart({y:e.target.value, x:startPosition.x})}}} type='number' value={startPosition.y}></input>
+                <select onChange={e => changeObject(e.target.value)}>
+                    <option defaultValue value='barrier'>Barreira</option>
+                    <option value='start'>Start</option>
+                    <option value='target'>Target</option>
+                </select>
             </div>
         </div>
     );
