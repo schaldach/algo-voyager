@@ -29,11 +29,11 @@ function PathFinding() {
         newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
         newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
         changeMap(newMap)
-        return(newMap)
+        return newMap
     }
 
     function runAlgorithm(){
-        let newMap = [...mapGrid]
+        let newMap = drawMap()
         changeMap(newMap)
         dijkstraPath(newMap)
     }
