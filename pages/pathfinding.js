@@ -11,7 +11,7 @@ function PathFinding() {
     const [allBarriers, changeBarriers] = useState([])
 
     useEffect(() => {
-        drawMap()
+        changeMap(drawMap)
     }, [targetPosition, startPosition, allBarriers])
 
     function drawMap(){
@@ -28,14 +28,11 @@ function PathFinding() {
         })
         newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
         newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
-        changeMap(newMap)
-        return newMap
+        return(newMap)
     }
 
     function runAlgorithm(){
-        let newMap = drawMap()
-        changeMap(newMap)
-        dijkstraPath(newMap)
+        dijkstraPath()
     }
 
     async function visualizeMap(newFilled){
@@ -47,9 +44,9 @@ function PathFinding() {
         changeMap(newMap)
     }
 
-    async function dijkstraPath(map){
+    async function dijkstraPath(){
         startAnimation(true)
-        let newMap = [...map]
+        let newMap = [...mapGrid]
         let targetFound = false
         let targetPosition = {}
         while(!targetFound){
@@ -163,7 +160,7 @@ function PathFinding() {
             </div>
             <div className="algobuttons">
                 <button className={animationRunning?'disabledbutton':''} onClick={() => {if(!animationRunning){runAlgorithm()}}}>Navegar</button>
-                <button onClick={drawMap}>Limpar</button>
+                <button onClick={() => changeMap(drawMap)}>Limpar</button>
                 <button onClick={() => Router.reload()}>Resetar</button>
                 <select onChange={e => changeObject(e.target.value)}>
                     <option defaultValue value='barrier'>Barreira</option>
