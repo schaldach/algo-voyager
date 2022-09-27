@@ -133,7 +133,7 @@ function PathFinding() {
                 {mapGrid.map((row,index) =>
                     <div key={index}>
                     {row.map((cell, index) => 
-                        <div style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${cell['shortestPath'].length*10},60,200)`}} key={index}></div>
+                        <div style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} key={index}></div>
                     )}
                     </div>
                 )}
