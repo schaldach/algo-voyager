@@ -40,10 +40,10 @@ function PathFinding() {
 
     async function visualizeMap(newFilled){
         let newMap = [...mapGrid]
-        newFilled.forEach(cell => {
-            newMap[cell.y][cell.x].state = 'filled'
-            newMap[cell.y][cell.x]['shortestPath'] = cell['shortestPath']
-        })
+        for(let i=0; i<newFilled.length; i++){
+            newMap[newFilled[i].y][newFilled[i].x].state = 'filled'
+            newMap[newFilled[i].y][newFilled[i].x]['shortestPath'] = newFilled[i]['shortestPath']
+        }
         changeMap(newMap)
     }
 
@@ -61,29 +61,29 @@ function PathFinding() {
                             if(newMap[y+1][x].target){targetFound = true; targetPosition = {x:x, y:y+1}}
                             newMap[y+1][x].state = 'filled'
                             newMap[y+1][x].active = false
-                            newMap[y+1][x]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x, y:y+1, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
+                            newMap[y+1][x]['shortestPath'] = newMap[y][x]['shortestPath'].concat([{x:x, y:y}])
+                            newCells.push({x:x, y:y+1, shortestPath: newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
                         }
                         if(y>0&&newMap[y-1][x].state==='empty'){
                             if(newMap[y-1][x].target){targetFound = true; targetPosition = {x:x, y:y-1}}
                             newMap[y-1][x].state = 'filled'
                             newMap[y-1][x].active = false
-                            newMap[y-1][x]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x, y:y-1, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
+                            newMap[y-1][x]['shortestPath'] = newMap[y][x]['shortestPath'].concat([{x:x, y:y}])
+                            newCells.push({x:x, y:y-1, shortestPath: newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
                         }
                         if(x<29&&newMap[y][x+1].state==='empty'){
                             if(newMap[y][x+1].target){targetFound = true; targetPosition = {x:x+1, y:y}}
                             newMap[y][x+1].state = 'filled'
                             newMap[y][x+1].active = false
-                            newMap[y][x+1]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x+1, y:y, shortestPath: [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
+                            newMap[y][x+1]['shortestPath'] = newMap[y][x]['shortestPath'].concat([{x:x, y:y}])
+                            newCells.push({x:x+1, y:y, shortestPath: newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
                         }
                         if(x>0&&newMap[y][x-1].state==='empty'){
                             if(newMap[y][x-1].target){targetFound = true; targetPosition = {x:x-1, y:y}}
                             newMap[y][x-1].state = 'filled'
                             newMap[y][x-1].active = false
-                            newMap[y][x-1]['shortestPath'] = [{x:x, y:y}].concat(newMap[y][x]['shortestPath'])
-                            newCells.push({x:x-1, y:y, shortestPath:[{x:x, y:y}].concat(newMap[y][x]['shortestPath'])})
+                            newMap[y][x-1]['shortestPath'] = newMap[y][x]['shortestPath'].concat([{x:x, y:y}])
+                            newCells.push({x:x-1, y:y, shortestPath:newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
                         }
                         newMap[y][x].active = false
                     }
@@ -101,10 +101,17 @@ function PathFinding() {
             })
         })
         console.log(targetPosition.x, targetPosition.y, newMap[targetPosition.y][targetPosition.x]['shortestPath'])
-        newMap[targetPosition.y][targetPosition.x]['shortestPath'].forEach(pathCell => {
-            newMap[pathCell.y][pathCell.x].state = 'filled'
-        })
+        for(let y=0; y<newMap[targetPosition.y][targetPosition.x]['shortestPath'].length; y++){
+            visualizePath(newMap[targetPosition.y][targetPosition.x]['shortestPath'][y])
+            await new Promise(r => setTimeout(r, 20))
+        }
         startAnimation(false)
+        changeMap(newMap)
+    }
+
+    async function visualizePath(pathCell){
+        let newMap = [...mapGrid]
+        newMap[pathCell.y][pathCell.x].state = 'filled'   
         changeMap(newMap)
     }
 
