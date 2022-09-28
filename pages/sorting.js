@@ -125,7 +125,7 @@ function Sorting() {
         }
         subArray.push(sortedArray[sortedArray.length-1])
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
     }
 
     async function bubbleSort(array){
@@ -146,7 +146,7 @@ function Sorting() {
             arrayCap--
         }
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
     }
 
     async function selectionSort(array){
@@ -170,7 +170,7 @@ function Sorting() {
             }
         }
         startAnimation(false)
-        changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
+        changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
     }
 
     async function quickSort(array, rootArray){
@@ -194,7 +194,7 @@ function Sorting() {
         let sortedArray = leftSide.concat(rightSide)
         if(rootArray){
             startAnimation(false)
-            changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
+            changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
         }
         return sortedArray
     }
@@ -228,7 +228,7 @@ function Sorting() {
         }
         if(rootArray){
             startAnimation(false)
-            changeArray(sortedArray.map(({n}) => ({n:n, color:'green'})))
+            changeArray(sortedArray.map(({n}) => ({n:n, color:'blue'})))
         }
         return sortedArray
     }
@@ -244,7 +244,7 @@ function Sorting() {
             </select>
             <div className="algotitle">{currentAlgo}</div>
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
-                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', background:`linear-gradient(to top, ${counter.color==='blue'?'var(--color4), var(--color5))':counter.color==='green'?'var(--color8), var(--color9))':'var(--color6), var(--color7))'}`}}></div>)}
+                {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', background:counter.color==='blue'?`rgb(${counter.color==='blue'?counter.n*256/currentArray.length:''}, 40, 240)`:'red'}}></div>)}
             </div>
             <div className="algobuttons">
                 <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
