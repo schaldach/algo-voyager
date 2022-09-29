@@ -130,7 +130,7 @@ function PathFinding() {
                 newMap[closestSide.y][closestSide.x].state = 'filled'
             }
             visualizeMap(newCells, true, {y:closestSide.y, x:closestSide.x})
-            await new Promise(r => setTimeout(r, 50))
+            await new Promise(r => setTimeout(r, 30))
         }
         if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
@@ -197,7 +197,7 @@ function PathFinding() {
                 newMap[newCell.y][newCell.x].active = true
             })
             visualizeMap(newCells)
-            await new Promise(r => setTimeout(r, 100))
+            await new Promise(r => setTimeout(r, 120))
         }
         if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
