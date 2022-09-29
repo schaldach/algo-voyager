@@ -158,3 +158,16 @@ main{
   box-sizing: border-box;
   border: 1px solid var(--color1);
 }
+.mapstatus{
+  font-family: var(--font1);
+  color: var(--color4);
+  font-size: 22px;
+}
+.maperror{
+  color: var(--color6);
+}
+.sortingsection{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

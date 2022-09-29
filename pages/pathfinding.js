@@ -5,7 +5,7 @@ function PathFinding() {
     const [currentAlgo, changeAlgo] = useState('Dijkstra')
     const [mapGrid, changeMap] = useState([])
     const [animationRunning, startAnimation] = useState(false)
-    const [error, changeStatus] = useState(false)
+    const [error, changeStatus] = useState(2)
     const [targetPosition, changeTarget] = useState({y:3, x:7})
     const [startPosition, changeStart] = useState({y:7, x:21})
     const [currentObject, changeObject] = useState('barrier')
@@ -16,6 +16,7 @@ function PathFinding() {
     }, [targetPosition, startPosition, allBarriers])
 
     function drawMap(){
+        changeStatus(2)
         startAnimation(false)
         let newMap = []
         for(let i=0; i<10; i++){
@@ -62,6 +63,7 @@ function PathFinding() {
     async function aStar(){
         let newMap = [...mapGrid]
         let targetFound = false
+        let mapError = false
         let pathFound = []
         while(!targetFound){
             let currentPath = [...pathFound]
@@ -79,7 +81,6 @@ function PathFinding() {
                                 closestSide.x = x-1
                                 closestSide.y = y
                             }
-                            newMap[y][x-1].state = 'filled'
                             newCells.push({x:x-1, y:y, shortestPath:currentPath})
                         }
                         if(y<9&&newMap[y+1][x].state==='empty'){
@@ -90,7 +91,6 @@ function PathFinding() {
                                 closestSide.x = x
                                 closestSide.y = y+1
                             }
-                            newMap[y+1][x].state = 'filled'
                             newCells.push({x:x, y:y+1, shortestPath:currentPath})
                         }
                         if(y>0&&newMap[y-1][x].state==='empty'){
@@ -101,7 +101,6 @@ function PathFinding() {
                                 closestSide.x = x
                                 closestSide.y = y-1
                             }
-                            newMap[y-1][x].state = 'filled'
                             newCells.push({x:x, y:y-1, shortestPath:currentPath})
                         }
                         if(x<29&&newMap[y][x+1].state==='empty'){
@@ -112,21 +111,22 @@ function PathFinding() {
                                 closestSide.x = x+1
                                 closestSide.y = y
                             }
-                            newMap[y][x+1].state = 'filled'
                             newCells.push({x:x+1, y:y, shortestPath:currentPath})
                         }
                         newMap[y][x].active = false
-                        if(closestSide.x<0){targetFound = true; console.log('nao achado')}
+                        if(closestSide.x<0){targetFound = true; mapError=true; changeStatus(0)}
                     }
                 })
             })
             if(!targetFound){
                 pathFound.push(closestSide)
                 newMap[closestSide.y][closestSide.x].active = true
+                newMap[closestSide.y][closestSide.x].state = 'filled'
             }
             visualizeMap(newCells)
-            await new Promise(r => setTimeout(r, 60))
+            await new Promise(r => setTimeout(r, 50))
         }
+        if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
@@ -142,6 +142,7 @@ function PathFinding() {
     async function dijkstraPath(){
         let newMap = [...mapGrid]
         let targetFound = false
+        let mapError = false
         while(!targetFound){
             let newCells = []
             let moved = false
@@ -184,13 +185,14 @@ function PathFinding() {
                     }
                 })
             })
-            if(!moved){targetFound = true; console.log('nao achado')}
+            if(!moved){targetFound = true; changeStatus(0); mapError=true}
             newCells.forEach(newCell => {
                 newMap[newCell.y][newCell.x].active = true
             })
             visualizeMap(newCells)
             await new Promise(r => setTimeout(r, 100))
         }
+        if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
@@ -243,11 +245,13 @@ function PathFinding() {
 
     return (
         <div className="sorting">
-            <select onChange={e => changeAlgo(e.target.value)}>
-                <option defaultValue value='Dijkstra'>Dijkstra</option>
-                <option value='A*'>A*</option>
-            </select>
-            <div className="algotitle">{currentAlgo}</div>
+            <div className="sortingsection">
+                <select onChange={e => changeAlgo(e.target.value)}>
+                    <option defaultValue value='Dijkstra'>Dijkstra</option>
+                    <option value='A*'>A*</option>
+                </select>
+                <div className="algotitle">{currentAlgo}</div>
+            </div>
             <div className="algomap">
                 {mapGrid.map((row,y) =>
                     <div key={y}>
@@ -267,6 +271,7 @@ function PathFinding() {
                     <option value='target'>Target</option>
                 </select>
             </div>
+            <div className={error===0?"mapstatus maperror":'mapstatus'}>{error===0?'O caminho não foi achado.':error===1?'Caminho achado com sucesso.':''}</div>
         </div>
     );
 }
