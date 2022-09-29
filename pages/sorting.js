@@ -10,7 +10,7 @@ function Sorting() {
 
     useEffect(() => {
         let newArray = []
-        for(let x=1; x<=128; x++){
+        for(let x=1; x<=256; x++){
             newArray.push({n:x, color:'blue'})
         }
         newArray = shuffleArray(newArray)
@@ -102,8 +102,8 @@ function Sorting() {
         let subArray = []
         for(let i=0; i<sortedArray.length-1; i++){
             if(sortedArray[i+1].n<sortedArray[i].n){
-                visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
-                await new Promise(r => setTimeout(r, 1))
+                visualizeArray([sortedArray[i].n, sortedArray[i+1].n], true)
+                await new Promise(r => setTimeout(r, 20))
                 let v = sortedArray[i]
                 sortedArray[i] = sortedArray[i+1]
                 sortedArray[i+1] = v
@@ -113,13 +113,16 @@ function Sorting() {
                 loop:
                 for(let y=subArray.length-1; y>0; y--){
                     if(sortedArray[y].n<sortedArray[y-1].n){
-                        visualizeArray([sortedArray[y-1].n, sortedArray[y].n])
-                        await new Promise(r => setTimeout(r, 1))
                         let v = sortedArray[y-1]
                         sortedArray[y-1] = sortedArray[y]
                         sortedArray[y] = v
+                        if(y===1){visualizeArray([sortedArray[y].n, sortedArray[y-1].n]);await new Promise(r => setTimeout(r,20))}
                     }
-                    else{break loop}
+                    else{
+                        if(y<subArray.length-1){visualizeArray([sortedArray[y+1].n, sortedArray[y].n])}
+                        await new Promise(r => setTimeout(r, 20))
+                        break loop
+                    }
                 }
             }
         }
