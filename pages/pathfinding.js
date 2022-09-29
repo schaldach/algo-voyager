@@ -120,7 +120,7 @@ function PathFinding() {
                             newCells.push({x:x+1, y:y, shortestPath:currentPath})
                         }
                         newMap[y][x].active = false
-                        if(closestSide.x<0){targetFound = true; mapError=true; changeStatus(0)}
+                        if(closestSide.x<0){targetFound = true; mapError=true}
                     }
                 })
             })
@@ -194,7 +194,7 @@ function PathFinding() {
                     }
                 })
             })
-            if(!moved){targetFound = true; changeStatus(0); mapError=true}
+            if(!moved){targetFound = true; mapError=true}
             newCells.forEach(newCell => {
                 newMap[newCell.y][newCell.x].active = true
             })
