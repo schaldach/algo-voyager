@@ -277,7 +277,7 @@ function PathFinding() {
                 )}
             </div>
             <div className="algobuttons">
-                <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
+                <button className={blockAlgorithm?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
                 <button className={animationRunning?'disabledbutton':''} onClick={drawMap}>Limpar caminho</button>
                 <button onClick={() => Router.reload()}>Resetar mapa</button>
                 <select onChange={e => changeObject(e.target.value)}>
