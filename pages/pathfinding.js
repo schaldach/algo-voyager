@@ -39,6 +39,7 @@ function PathFinding() {
     function runAlgorithm(){
         if(blockAlgorithm){return}
         startAnimation(true)
+        setAlgorithm(true)
         switch(currentAlgo){
             case 'Dijkstra':
                 dijkstraPath()
@@ -148,7 +149,6 @@ function PathFinding() {
         }
         changeMap(newMap)
         startAnimation(false)
-        setAlgorithm(true)
     }
 
     async function dijkstraPath(){
@@ -218,7 +218,6 @@ function PathFinding() {
         }
         changeMap(newMap)
         startAnimation(false)
-        setAlgorithm(true)
     }
 
     async function visualizePath(pathCell){
