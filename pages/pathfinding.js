@@ -12,12 +12,12 @@ function PathFinding() {
     const [allBarriers, changeBarriers] = useState([{x:14, y:3}, {x:14, y:4}, {x:14, y:5}, {x:14, y:6}, {x:14, y:7}])
 
     useEffect(() => {
-        changeMap(drawMap)
+        drawMap()
     }, [targetPosition, startPosition, allBarriers])
 
     function drawMap(){
+        if(animationRunning){return}
         changeStatus(2)
-        startAnimation(false)
         let newMap = []
         for(let i=0; i<10; i++){
             let subMap = []
@@ -31,7 +31,7 @@ function PathFinding() {
         })
         newMap[targetPosition.y][targetPosition.x] = {state:'empty', active:false, target:true, shortestPath:[]}
         newMap[startPosition.y][startPosition.x] = {state:'filled', active:true, shortestPath:[], start:true}
-        return(newMap)
+        changeMap(newMap)
     }
 
     function runAlgorithm(){
@@ -47,10 +47,16 @@ function PathFinding() {
         }
     }
 
-    async function visualizeMap(newFilled){
+    async function visualizeMap(newFilled, onlyVisual, closestSide){
         let newMap = [...mapGrid]
         for(let i=0; i<newFilled.length; i++){
-            newMap[newFilled[i].y][newFilled[i].x].state = 'filled'
+            if(onlyVisual){
+                newMap[newFilled[i].y][newFilled[i].x].state = 'semifilled'
+                newMap[newFilled[i].y][newFilled[i].x].state = newFilled[i].y===closestSide.y&&newFilled[i].x===closestSide.x?'filled':'semifilled'
+            }
+            else{
+                newMap[newFilled[i].y][newFilled[i].x].state = 'filled'
+            }
             newMap[newFilled[i].y][newFilled[i].x]['shortestPath'] = newFilled[i]['shortestPath']
         }
         changeMap(newMap)
@@ -73,7 +79,7 @@ function PathFinding() {
                 row.forEach((cell,x) => {
                     if(cell.active){
                         let closestSideDistance = Infinity
-                        if(x>0&&newMap[y][x-1].state==='empty'){
+                        if(x>0&&(newMap[y][x-1].state==='empty'||newMap[y][x-1].state==='semifilled')){
                             if(newMap[y][x-1].target){targetFound = true}
                             let distance = euclideanDistance(x-1, y, targetPosition.x, targetPosition.y)
                             if(distance<closestSideDistance){
@@ -83,7 +89,7 @@ function PathFinding() {
                             }
                             newCells.push({x:x-1, y:y, shortestPath:currentPath})
                         }
-                        if(y<9&&newMap[y+1][x].state==='empty'){
+                        if(y<9&&(newMap[y+1][x].state==='empty'||newMap[y+1][x].state==='semifilled')){
                             if(newMap[y+1][x].target){targetFound = true}
                             let distance = euclideanDistance(x, y+1, targetPosition.x, targetPosition.y)
                             if(distance<closestSideDistance){
@@ -93,7 +99,7 @@ function PathFinding() {
                             }
                             newCells.push({x:x, y:y+1, shortestPath:currentPath})
                         }
-                        if(y>0&&newMap[y-1][x].state==='empty'){
+                        if(y>0&&(newMap[y-1][x].state==='empty'||newMap[y-1][x].state==='semifilled')){
                             if(newMap[y-1][x].target){targetFound = true}
                             let distance = euclideanDistance(x, y-1, targetPosition.x, targetPosition.y)
                             if(distance<closestSideDistance){
@@ -103,7 +109,7 @@ function PathFinding() {
                             }
                             newCells.push({x:x, y:y-1, shortestPath:currentPath})
                         }
-                        if(x<29&&newMap[y][x+1].state==='empty'){
+                        if(x<29&&(newMap[y][x+1].state==='empty'||newMap[y][x+1].state==='semifilled')){
                             if(newMap[y][x+1].target){targetFound = true}
                             let distance = euclideanDistance(x+1, y, targetPosition.x, targetPosition.y)
                             if(distance<closestSideDistance){
@@ -123,7 +129,7 @@ function PathFinding() {
                 newMap[closestSide.y][closestSide.x].active = true
                 newMap[closestSide.y][closestSide.x].state = 'filled'
             }
-            visualizeMap(newCells)
+            visualizeMap(newCells, true, {y:closestSide.y, x:closestSide.x})
             await new Promise(r => setTimeout(r, 50))
         }
         if(!mapError){changeStatus(1)}
@@ -137,6 +143,7 @@ function PathFinding() {
             await new Promise(r => setTimeout(r, 20))
         }
         changeMap(newMap)
+        startAnimation(false)
     }
 
     async function dijkstraPath(){
@@ -204,6 +211,7 @@ function PathFinding() {
             await new Promise(r => setTimeout(r, 20))
         }
         changeMap(newMap)
+        startAnimation(false)
     }
 
     async function visualizePath(pathCell){
@@ -213,7 +221,7 @@ function PathFinding() {
     }
 
     function changeCell(cell){
-        startAnimation(false)
+        if(animationRunning){return}
         let newMap = [...mapGrid]
         switch(currentObject){
             case 'barrier':
@@ -263,7 +271,7 @@ function PathFinding() {
             </div>
             <div className="algobuttons">
                 <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
-                <button onClick={() => changeMap(drawMap)}>Limpar caminho</button>
+                <button className={animationRunning?'disabledbutton':''} onClick={drawMap}>Limpar caminho</button>
                 <button onClick={() => Router.reload()}>Resetar mapa</button>
                 <select onChange={e => changeObject(e.target.value)}>
                     <option defaultValue value='barrier'>Barreira</option>
