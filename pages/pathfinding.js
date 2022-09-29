@@ -5,6 +5,7 @@ function PathFinding() {
     const [currentAlgo, changeAlgo] = useState('Dijkstra')
     const [mapGrid, changeMap] = useState([])
     const [animationRunning, startAnimation] = useState(false)
+    const [blockAlgorithm, setAlgorithm] = useState(false)
     const [error, changeStatus] = useState(2)
     const [targetPosition, changeTarget] = useState({y:3, x:7})
     const [startPosition, changeStart] = useState({y:7, x:21})
@@ -17,6 +18,7 @@ function PathFinding() {
 
     function drawMap(){
         if(animationRunning){return}
+        setAlgorithm(false)
         changeStatus(2)
         let newMap = []
         for(let i=0; i<10; i++){
@@ -35,7 +37,7 @@ function PathFinding() {
     }
 
     function runAlgorithm(){
-        if(animationRunning){return}
+        if(blockAlgorithm){return}
         startAnimation(true)
         switch(currentAlgo){
             case 'Dijkstra':
@@ -120,7 +122,7 @@ function PathFinding() {
                             newCells.push({x:x+1, y:y, shortestPath:currentPath})
                         }
                         newMap[y][x].active = false
-                        if(closestSide.x<0){targetFound = true; mapError=true}
+                        if(closestSide.x<0){targetFound = true; mapError=true; changeStatus(0)}
                     }
                 })
             })
@@ -146,6 +148,7 @@ function PathFinding() {
         }
         changeMap(newMap)
         startAnimation(false)
+        setAlgorithm(true)
     }
 
     async function dijkstraPath(){
@@ -194,7 +197,7 @@ function PathFinding() {
                     }
                 })
             })
-            if(!moved){targetFound = true; mapError=true}
+            if(!moved){targetFound = true; changeStatus(0); mapError=true}
             newCells.forEach(newCell => {
                 newMap[newCell.y][newCell.x].active = true
             })
@@ -215,6 +218,7 @@ function PathFinding() {
         }
         changeMap(newMap)
         startAnimation(false)
+        setAlgorithm(true)
     }
 
     async function visualizePath(pathCell){
