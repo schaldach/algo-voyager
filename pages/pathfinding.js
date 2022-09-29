@@ -132,15 +132,17 @@ function PathFinding() {
             visualizeMap(newCells, true, {y:closestSide.y, x:closestSide.x})
             await new Promise(r => setTimeout(r, 30))
         }
-        if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
             })
         })
-        for(let y=0; y<pathFound.length; y++){
-            visualizePath(pathFound[y])
-            await new Promise(r => setTimeout(r, 20))
+        if(!mapError){
+            changeStatus(1)
+            for(let y=0; y<pathFound.length; y++){
+                visualizePath(pathFound[y])
+                await new Promise(r => setTimeout(r, 20))
+            }
         }
         changeMap(newMap)
         startAnimation(false)
@@ -199,16 +201,17 @@ function PathFinding() {
             visualizeMap(newCells)
             await new Promise(r => setTimeout(r, 120))
         }
-        if(!mapError){changeStatus(1)}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
             })
         })
-        console.log(targetPosition.x, targetPosition.y, newMap[targetPosition.y][targetPosition.x]['shortestPath'])
-        for(let y=0; y<newMap[targetPosition.y][targetPosition.x]['shortestPath'].length; y++){
-            visualizePath(newMap[targetPosition.y][targetPosition.x]['shortestPath'][y])
-            await new Promise(r => setTimeout(r, 20))
+        if(!mapError){
+            changeStatus(1)
+            for(let y=0; y<newMap[targetPosition.y][targetPosition.x]['shortestPath'].length; y++){
+                visualizePath(newMap[targetPosition.y][targetPosition.x]['shortestPath'][y])
+                await new Promise(r => setTimeout(r, 20))
+            }
         }
         changeMap(newMap)
         startAnimation(false)
