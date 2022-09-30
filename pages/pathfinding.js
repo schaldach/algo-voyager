@@ -11,6 +11,12 @@ function PathFinding() {
     const [startPosition, changeStart] = useState({y:7, x:21})
     const [currentObject, changeObject] = useState('barrier')
     const [allBarriers, changeBarriers] = useState([{x:14, y:3}, {x:14, y:4}, {x:14, y:5}, {x:14, y:6}, {x:14, y:7}])
+    const [mouseClicked, holdMouse] = useState(false)
+
+    useEffect(() => {
+        window.addEventListener("mousedown", () => holdMouse(true))
+        window.addEventListener("mouseup", () => holdMouse(false))
+    }, [])
 
     useEffect(() => {
         drawMap()
@@ -252,7 +258,10 @@ function PathFinding() {
                 {mapGrid.map((row,y) =>
                     <div key={y}>
                     {row.map((cell,x) => 
-                        <div onClick={() => changeCell({y:y, x:x})} style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} key={x}></div>
+                        <div onClick={() => changeCell({y:y, x:x})}
+                        onMouseEnter={() => {if(mouseClicked){changeCell({y:y, x:x})}}} 
+                        style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} 
+                        key={x}></div>
                     )}
                     </div>
                 )}
