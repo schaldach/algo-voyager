@@ -50,90 +50,72 @@ function PathFinding() {
         }
     }
 
-    async function visualizeMap(newFilled, onlyVisual, closestSide){
+    async function visualizeMap(newFilled){
         let newMap = [...mapGrid]
         for(let i=0; i<newFilled.length; i++){
-            if(onlyVisual){
-                newMap[newFilled[i].y][newFilled[i].x].state = 'semifilled'
-                newMap[newFilled[i].y][newFilled[i].x].state = newFilled[i].y===closestSide.y&&newFilled[i].x===closestSide.x?'filled':'semifilled'
-            }
-            else{
-                newMap[newFilled[i].y][newFilled[i].x].state = 'filled'
-            }
+            newMap[newFilled[i].y][newFilled[i].x].state = 'filled'
             newMap[newFilled[i].y][newFilled[i].x]['shortestPath'] = newFilled[i]['shortestPath']
         }
         changeMap(newMap)
     }
 
-    function euclideanDistance(x1,y1,x2,y2){
-        return(Math.sqrt((x2-x1)**2 + (y2-y1)**2))
+    function manhattanDistance(x1,y1,x2,y2){
+        return(Math.abs(x2-x1) + Math.abs(y2-y1))
     }
 
     async function aStar(){
         let newMap = [...mapGrid]
         let targetFound = false
         let mapError = false
-        let pathFound = []
+        let remainingCells = []
         while(!targetFound){
-            let currentPath = [...pathFound]
             let newCells = []
-            let closestSide = {x:-1}
             newMap.forEach((row,y) => {
                 row.forEach((cell,x) => {
                     if(cell.active){
-                        let closestSideDistance = Infinity
-                        if(x>0&&(newMap[y][x-1].state==='empty'||newMap[y][x-1].state==='semifilled')){
+                        if(x>0&&newMap[y][x-1].state==='empty'){
                             if(newMap[y][x-1].target){targetFound = true}
-                            let distance = euclideanDistance(x-1, y, targetPosition.x, targetPosition.y)
-                            if(distance<closestSideDistance){
-                                closestSideDistance=distance
-                                closestSide.x = x-1
-                                closestSide.y = y
-                            }
-                            newCells.push({x:x-1, y:y, shortestPath:currentPath})
+                            newMap[y][x-1].state = 'filled'
+                            let distance = manhattanDistance(x-1, y, targetPosition.x, targetPosition.y)+newMap[y][x]['shortestPath'].length
+                            newCells.push({x:x-1, y:y, fcost:distance, shortestPath:newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
+                            remainingCells.push({x:x-1, y:y, fcost:distance})
                         }
-                        if(y<9&&(newMap[y+1][x].state==='empty'||newMap[y+1][x].state==='semifilled')){
+                        if(y<9&&newMap[y+1][x].state==='empty'){
                             if(newMap[y+1][x].target){targetFound = true}
-                            let distance = euclideanDistance(x, y+1, targetPosition.x, targetPosition.y)
-                            if(distance<closestSideDistance){
-                                closestSideDistance=distance
-                                closestSide.x = x
-                                closestSide.y = y+1
-                            }
-                            newCells.push({x:x, y:y+1, shortestPath:currentPath})
+                            newMap[y+1][x].state = 'filled'
+                            let distance = manhattanDistance(x, y+1, targetPosition.x, targetPosition.y)+newMap[y][x]['shortestPath'].length
+                            newCells.push({x:x, y:y+1, fcost:distance, shortestPath:newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
+                            remainingCells.push({x:x, y:y+1, fcost:distance})
                         }
-                        if(y>0&&(newMap[y-1][x].state==='empty'||newMap[y-1][x].state==='semifilled')){
+                        if(y>0&&newMap[y-1][x].state==='empty'){
                             if(newMap[y-1][x].target){targetFound = true}
-                            let distance = euclideanDistance(x, y-1, targetPosition.x, targetPosition.y)
-                            if(distance<closestSideDistance){
-                                closestSideDistance=distance
-                                closestSide.x = x
-                                closestSide.y = y-1
-                            }
-                            newCells.push({x:x, y:y-1, shortestPath:currentPath})
+                            newMap[y-1][x].state = 'filled'
+                            let distance = manhattanDistance(x, y-1, targetPosition.x, targetPosition.y)+newMap[y][x]['shortestPath'].length
+                            newCells.push({x:x, y:y-1, fcost:distance, shortestPath:newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
+                            remainingCells.push({x:x, y:y-1, fcost:distance})
                         }
-                        if(x<29&&(newMap[y][x+1].state==='empty'||newMap[y][x+1].state==='semifilled')){
+                        if(x<29&&newMap[y][x+1].state==='empty'){
                             if(newMap[y][x+1].target){targetFound = true}
-                            let distance = euclideanDistance(x+1, y, targetPosition.x, targetPosition.y)
-                            if(distance<closestSideDistance){
-                                closestSideDistance=distance
-                                closestSide.x = x+1
-                                closestSide.y = y
-                            }
-                            newCells.push({x:x+1, y:y, shortestPath:currentPath})
+                            newMap[y][x+1].state = 'filled'
+                            let distance = manhattanDistance(x+1, y, targetPosition.x, targetPosition.y)+newMap[y][x]['shortestPath'].length
+                            newCells.push({x:x+1, y:y, fcost:distance, shortestPath:newMap[y][x]['shortestPath'].concat([{x:x, y:y}])})
+                            remainingCells.push({x:x+1, y:y, fcost:distance})
                         }
                         newMap[y][x].active = false
-                        if(closestSide.x<0){targetFound = true; mapError=true; changeStatus(0)}
                     }
                 })
             })
-            if(!targetFound){
-                pathFound.push(closestSide)
+            if(!remainingCells.length){targetFound = true; mapError=true; changeStatus(0)}
+            else{
+                remainingCells.sort((a,b) => a.fcost-b.fcost)
+                console.log(remainingCells)
+                let closestSide = remainingCells[0]
+                remainingCells.shift()
                 newMap[closestSide.y][closestSide.x].active = true
-                newMap[closestSide.y][closestSide.x].state = 'filled'
+                console.log(closestSide)
+                visualizeMap(newCells)
+                await new Promise(r => setTimeout(r, 20))
             }
-            visualizeMap(newCells, true, {y:closestSide.y, x:closestSide.x})
-            await new Promise(r => setTimeout(r, 30))
         }
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
@@ -142,8 +124,8 @@ function PathFinding() {
         })
         if(!mapError){
             changeStatus(1)
-            for(let y=0; y<pathFound.length; y++){
-                visualizePath(pathFound[y])
+            for(let y=0; y<newMap[targetPosition.y][targetPosition.x]['shortestPath'].length; y++){
+                visualizePath(newMap[targetPosition.y][targetPosition.x]['shortestPath'][y])
                 await new Promise(r => setTimeout(r, 20))
             }
         }
