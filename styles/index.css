@@ -182,7 +182,7 @@ main{
   height: 100%;
 }
 .color-transition{
-  animation: inner-circle linear 0.2s;
+  animation: inner-circle linear 0.4s;
 }
 @keyframes inner-circle{
   0%{
