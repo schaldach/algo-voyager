@@ -5,8 +5,10 @@ function Sorting() {
     const [currentAlgo, changeAlgo] = useState('Merge Sort')
     const [currentArray, changeArray] = useState([])
     const [animationRunning, startAnimation] = useState(false)
-    const stateRef = useRef();
-    stateRef.current = currentArray
+    const [animationBlock, stopAnimation] = useState(false)
+    const stateRef = useRef([]);
+    stateRef.current[0] = currentArray
+    stateRef.current[1] = animationBlock
 
     useEffect(() => {
         let newArray = []
@@ -18,7 +20,7 @@ function Sorting() {
     }, [])
 
     async function runAlgorithm(){
-        if(animationRunning){return}
+        if(animationRunning&&animationBlock){return}
         startAnimation(true)
         switch(currentAlgo){
             case 'Merge Sort':
@@ -73,7 +75,7 @@ function Sorting() {
     }
 
     function visualizeArray(indexes, swapmode, quickmode, quickright){
-        let newArray = stateRef.current
+        let newArray = stateRef.current[0]
         newArray = newArray.map(({n}) => ({n:n, color:'blue'}))
         const index0 = newArray.findIndex(c => c.n === indexes[0])
         const index1 = newArray.findIndex(c => c.n === indexes[1])
@@ -101,6 +103,7 @@ function Sorting() {
         let sortedArray = array
         let subArray = []
         for(let i=0; i<sortedArray.length-1; i++){
+            if(stateRef.current[1]){return}
             if(sortedArray[i+1].n<sortedArray[i].n){
                 visualizeArray([sortedArray[i].n, sortedArray[i+1].n], true)
                 await new Promise(r => setTimeout(r, 20))
@@ -112,6 +115,7 @@ function Sorting() {
             if(!isSorted(subArray)){
                 loop:
                 for(let y=subArray.length-1; y>0; y--){
+                    if(stateRef.current[1]){return}
                     if(sortedArray[y].n<sortedArray[y-1].n){
                         let v = sortedArray[y-1]
                         sortedArray[y-1] = sortedArray[y]
@@ -137,6 +141,7 @@ function Sorting() {
         let arrayCap = sortedArray.length-1
         while(!isSorted(sortedArray)){
             for(let i=0; i<arrayCap; i++){
+                if(stateRef.current[1]){return}
                 visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
                 if(sortedArray[i+1].n<sortedArray[i].n){
                     visualizeArray([sortedArray[i].n, sortedArray[i+1].n])
@@ -156,15 +161,16 @@ function Sorting() {
         if(array.length<=1){return array}
         let sortedArray = array
         for(let i=0; i<sortedArray.length-1; i++){
+            if(stateRef.current[1]){return}
             await new Promise(r => setTimeout(r, 50))
             let lowestItem = sortedArray[i+1].n
             let lowestItemPosition = i+1
             for(let y=i+1; y<sortedArray.length; y++){
+                if(stateRef.current[1]){return}
                 if(sortedArray[y].n<lowestItem){
                     lowestItem = sortedArray[y].n
                     lowestItemPosition = y
                 }
-                
             }
             visualizeArray([sortedArray[i].n, lowestItem], true)
             if(lowestItem<sortedArray[i].n){
@@ -182,6 +188,7 @@ function Sorting() {
         let leftSide = []
         let rightSide = []
         for(let i=0; i<array.length-1; i++){
+            if(stateRef.current[1]){return}
             if(array[i].n<pivot.n){
                 leftSide.push(array[i])
             }
@@ -193,6 +200,7 @@ function Sorting() {
         }
         if(!isSorted(leftSide)){leftSide = await quickSort(leftSide)}
         if(!isSorted(rightSide)){rightSide = await quickSort(rightSide)}
+        if(stateRef.current[1]){return}
         leftSide.push(pivot)
         let sortedArray = leftSide.concat(rightSide)
         if(rootArray){
@@ -204,10 +212,12 @@ function Sorting() {
 
     async function mergeSort(array, rootArray){
         if(array.length<=1){return array}
+        if(stateRef.current[1]){return}
         let leftSide = array.slice(0, Math.ceil(array.length/2))
         let rightSide = array.slice(Math.ceil(array.length/2), array.length)
         if(!isSorted(leftSide)){leftSide = await mergeSort(leftSide)}
         if(!isSorted(rightSide)){rightSide = await mergeSort(rightSide)}
+        if(stateRef.current[1]){return}
         let sortedArray = leftSide.concat(rightSide)
         let arrayCounter = 0
         let rightoverflow = false
@@ -215,6 +225,7 @@ function Sorting() {
         let leftoverflow = false
         let leftcounter = 0
         while(arrayCounter<sortedArray.length){
+            if(stateRef.current[1]){return}
             if(!leftoverflow&&!rightoverflow){visualizeArray([leftSide[leftcounter].n, rightSide[rightcounter].n])}
             if(rightoverflow||!leftoverflow&&leftSide[leftcounter].n<rightSide[rightcounter].n){
                 sortedArray[arrayCounter] = leftSide[leftcounter]
@@ -250,10 +261,10 @@ function Sorting() {
                 {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', background:counter.color==='blue'?`rgb(${counter.color==='blue'?counter.n*256/currentArray.length:''}, 40, 240)`:'red'}}></div>)}
             </div>
             <div className="algobuttons">
-                <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
-                <button className={animationRunning?'disabledbutton':''} onClick={() => {if(!animationRunning){changeArray(shuffleArray(currentArray))}}}>Embaralhar</button>
-                <button onClick={() => Router.reload()}>Resetar</button>
-                <input placeholder="Length" type='number' value={currentArray.length?currentArray.length:''} onChange={e => scaleArray(e.target.value)}></input>
+                <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
+                <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={() => {if(!animationRunning&&!animationBlock){changeArray(shuffleArray(currentArray))}}}>Embaralhar</button>
+                <button onClick={() => {stopAnimation(true); scaleArray(currentArray.length); setTimeout(() => {startAnimation(false);stopAnimation(false)}, 500)}}>Resetar</button>
+                <input placeholder="Length" type='number' value={currentArray.length?currentArray.length:''} onChange={e => {if(!animationRunning){scaleArray(e.target.value)}}}></input>
             </div>
         </div>
     );
