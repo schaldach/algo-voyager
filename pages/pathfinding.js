@@ -261,7 +261,7 @@ function PathFinding() {
                         <div onClick={() => changeCell({y:y, x:x})}
                         onMouseEnter={() => {if(mouseClicked){changeCell({y:y, x:x})}}} 
                         key={x}>
-                            <div className={cell.state === 'filled'?'color-transition inner-circle':'inner-circle'}
+                            <div className={cell.state === 'filled'&&!cell.target?'color-transition inner-circle':'inner-circle'}
                             style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} />
                         </div>
                     )}
