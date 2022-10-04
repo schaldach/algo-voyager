@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import Router from 'next/router'
+import React, {useEffect, useState, useRef} from "react";
+
 
 function PathFinding() {
     const [currentAlgo, changeAlgo] = useState('Dijkstra')
@@ -12,6 +12,9 @@ function PathFinding() {
     const [currentObject, changeObject] = useState('barrier')
     const [allBarriers, changeBarriers] = useState([{x:14, y:3}, {x:14, y:4}, {x:14, y:5}, {x:14, y:6}, {x:14, y:7}])
     const [mouseClicked, holdMouse] = useState(false)
+    const [animationBlock, stopAnimation] = useState(false)
+    const stateRef = useRef()
+    stateRef.current = animationBlock
 
     useEffect(() => {
         window.addEventListener("mousedown", () => holdMouse(true))
@@ -22,9 +25,9 @@ function PathFinding() {
         drawMap()
     }, [targetPosition, startPosition, allBarriers])
 
-    function drawMap(){
+    function drawMap(reset){
         if(animationRunning){return}
-        setAlgorithm(false)
+        if(!reset){setAlgorithm(false)}
         changeStatus(2)
         let newMap = []
         for(let i=0; i<10; i++){
@@ -78,6 +81,7 @@ function PathFinding() {
             let newCells = []
             newMap.forEach((row,y) => {
                 row.forEach((cell,x) => {
+                    if(stateRef.current){drawMap(true); return}
                     if(cell.active){
                         if(x>0&&newMap[y][x-1].state==='empty'){
                             if(newMap[y][x-1].target){targetFound = true}
@@ -111,6 +115,7 @@ function PathFinding() {
                     }
                 })
             })
+            if(stateRef.current){targetFound = true; return}
             if(!remainingCells.length){targetFound = true; mapError=true; changeStatus(0)}
             else{
                 remainingCells.sort((a,b) => a.fcost-b.fcost)
@@ -123,6 +128,7 @@ function PathFinding() {
                 await new Promise(r => setTimeout(r, 20))
             }
         }
+        if(stateRef.current){startAnimation(false);return}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
@@ -139,6 +145,10 @@ function PathFinding() {
         startAnimation(false)
     }
 
+    async function generateMaze(){
+
+    }
+
     async function dijkstraPath(){
         let newMap = [...mapGrid]
         let targetFound = false
@@ -148,6 +158,7 @@ function PathFinding() {
             let moved = false
             newMap.forEach((row,y) => {
                 row.forEach((cell,x) => {
+                    if(stateRef.current){drawMap(true); return}
                     if(cell.active){
                         if(y<9&&newMap[y+1][x].state==='empty'){
                             if(newMap[y+1][x].target){targetFound = true}
@@ -185,6 +196,7 @@ function PathFinding() {
                     }
                 })
             })
+            if(stateRef.current){targetFound = true;return}
             if(!moved){targetFound = true; changeStatus(0); mapError=true}
             newCells.forEach(newCell => {
                 newMap[newCell.y][newCell.x].active = true
@@ -192,6 +204,7 @@ function PathFinding() {
             visualizeMap(newCells)
             await new Promise(r => setTimeout(r, 120))
         }
+        if(stateRef.current){startAnimation(false);return}
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 newMap[y][x].state = newMap[y][x].state==='blocked'?'blocked':'empty'
@@ -269,9 +282,10 @@ function PathFinding() {
                 )}
             </div>
             <div className="algobuttons">
-                <button className={blockAlgorithm?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
-                <button className={animationRunning?'disabledbutton':''} onClick={drawMap}>Limpar caminho</button>
-                <button onClick={() => Router.reload()}>Resetar mapa</button>
+                <button className={blockAlgorithm||animationBlock?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
+                <button className={blockAlgorithm||animationBlock?'disabledbutton':''} onClick={generateMaze}>Gerar Labirinto</button>
+                <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={() => drawMap(false)}>Limpar caminho</button>
+                <button className={!animationRunning||animationBlock?'disabledbutton':''} onClick={() => {if(animationRunning&&!animationBlock){stopAnimation(true); setTimeout(() => {startAnimation(false);stopAnimation(false)}, 500)}}}>Resetar</button>
                 <select onChange={e => changeObject(e.target.value)}>
                     <option defaultValue value='barrier'>Barreira</option>
                     <option value='start'>Start</option>

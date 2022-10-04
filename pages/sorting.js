@@ -1,5 +1,4 @@
 import React, {useEffect, useState, useRef} from "react";
-import Router from 'next/router'
 
 function Sorting() {
     const [currentAlgo, changeAlgo] = useState('Merge Sort')
@@ -20,7 +19,7 @@ function Sorting() {
     }, [])
 
     async function runAlgorithm(){
-        if(animationRunning&&animationBlock){return}
+        if(animationRunning||animationBlock){return}
         startAnimation(true)
         switch(currentAlgo){
             case 'Merge Sort':
@@ -263,7 +262,7 @@ function Sorting() {
             <div className="algobuttons">
                 <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={runAlgorithm}>Ordenar</button>
                 <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={() => {if(!animationRunning&&!animationBlock){changeArray(shuffleArray(currentArray))}}}>Embaralhar</button>
-                <button onClick={() => {stopAnimation(true); scaleArray(currentArray.length); setTimeout(() => {startAnimation(false);stopAnimation(false)}, 500)}}>Resetar</button>
+                <button className={!animationRunning||animationBlock?'disabledbutton':''} onClick={() => {if(animationRunning&&!animationBlock){stopAnimation(true); scaleArray(currentArray.length); setTimeout(() => {startAnimation(false);stopAnimation(false)}, 500)}}}>Resetar</button>
                 <input placeholder="Length" type='number' value={currentArray.length?currentArray.length:''} onChange={e => {if(!animationRunning){scaleArray(e.target.value)}}}></input>
             </div>
         </div>
