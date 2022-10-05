@@ -145,10 +145,6 @@ function PathFinding() {
         startAnimation(false)
     }
 
-    async function generateMaze(){
-
-    }
-
     async function dijkstraPath(){
         let newMap = [...mapGrid]
         let targetFound = false
@@ -260,7 +256,7 @@ function PathFinding() {
 
     return (
         <div className="sorting">
-            <div className="sortingsection">
+            <div className="titledisplay">
                 <select onChange={e => changeAlgo(e.target.value)}>
                     <option defaultValue value='Dijkstra'>Dijkstra</option>
                     <option value='A*'>A*</option>
@@ -283,7 +279,6 @@ function PathFinding() {
             </div>
             <div className="algobuttons">
                 <button className={blockAlgorithm||animationBlock?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
-                <button className={blockAlgorithm||animationBlock?'disabledbutton':''} onClick={generateMaze}>Gerar Labirinto</button>
                 <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={() => drawMap(false)}>Limpar caminho</button>
                 <button className={!animationRunning||animationBlock?'disabledbutton':''} onClick={() => {if(animationRunning&&!animationBlock){stopAnimation(true); setTimeout(() => {startAnimation(false);stopAnimation(false)}, 500)}}}>Resetar</button>
                 <select onChange={e => changeObject(e.target.value)}>

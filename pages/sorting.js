@@ -248,14 +248,16 @@ function Sorting() {
     
     return (
         <div className="sorting">
-            <select onChange={e => changeAlgo(e.target.value)}>
-                <option defaultValue value='Merge Sort'>Merge Sort</option>
-                <option value='Selection Sort'>Selection Sort</option>
-                <option value='Quick Sort'>Quick Sort</option>
-                <option value='Bubble Sort'>Bubble Sort</option>
-                <option value='Insertion Sort'>Insertion Sort</option>
-            </select>
-            <div className="algotitle">{currentAlgo}</div>
+            <div className="titledisplay">
+                <select onChange={e => changeAlgo(e.target.value)}>
+                    <option defaultValue value='Merge Sort'>Merge Sort</option>
+                    <option value='Selection Sort'>Selection Sort</option>
+                    <option value='Quick Sort'>Quick Sort</option>
+                    <option value='Bubble Sort'>Bubble Sort</option>
+                    <option value='Insertion Sort'>Insertion Sort</option>
+                </select>
+                <div className="algotitle">{currentAlgo}</div>
+            </div>
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
                 {currentArray.map((counter,index) => <div key={index} style={{height:String(counter.n*100/currentArray.length)+'%', background:counter.color==='blue'?`rgb(${counter.color==='blue'?counter.n*256/currentArray.length:''}, 40, 240)`:'red'}}></div>)}
             </div>

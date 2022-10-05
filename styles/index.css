@@ -89,11 +89,10 @@ main{
   font-size: 30px;
 }
 .algobars{
-  height: 52.5vh;
+  height: 60vh;
   width: 90vw;
   display: grid;
   align-items: flex-end;
-  gap: 1px;
 }
 .algobars>div{
   width: 100%;
@@ -127,6 +126,10 @@ main{
 .title{
   font-family: var(--font1);
 }
+.titledisplay{
+  display: flex;
+  gap: 20px;
+}
 .homescreen{
   font-family: var(--font1);
   font-size: 35px;
@@ -141,19 +144,15 @@ main{
 .algomap{
   display: grid;
   grid-template-rows: repeat(10, 1fr);
-  height: 52.5vh;
-  width: calc(52.5vh * 3);
+  height: 55vh;
+  width: calc(55vh * 3);
   border: 1px solid var(--color2);
 }
 .algomap>div{
-  display: flex;
-  align-items: center;
-  height: 5.25vh;
-  width: calc(52.5vh * 3);
+  display: grid;
+  grid-template-columns: repeat(30, 1fr);
 }
 .algomap>div>div{
-  width: 5.25vh;
-  height: 5.25vh;
   cursor: pointer;
   box-sizing: border-box;
   display: grid;
@@ -161,8 +160,8 @@ main{
   overflow: hidden;
   border: 1px solid var(--color2);
 }
-.color-transition{
-  animation: color linear 0.4s;
+.algomap>div>div:hover{
+  border: 2px solid var(--color4);
 }
 .mapstatus{
   font-family: var(--font1);
@@ -171,11 +170,6 @@ main{
 }
 .maperror{
   color: var(--color6);
-}
-.sortingsection{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .inner-circle{
   width: 100%;
