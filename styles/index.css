@@ -163,6 +163,12 @@ main{
 .algomap>div>div:hover{
   border: 2px solid var(--color4);
 }
+.perlinmap>div>div{
+  cursor: auto;
+}
+.perlinmap>div>div:hover{
+  border: 1px solid var(--color2);
+}
 .mapstatus{
   font-family: var(--font1);
   color: var(--color4);
