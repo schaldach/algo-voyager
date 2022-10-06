@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 
 function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
-    const [currentRepresentation, changeRepresentation] = useState('Terreno')
+    const [currentRepresentation, changeRepresentation] = useState('Estática')
     const [map2D, changeMap] = useState([])
     const [line1D, changeLine] = useState([])
 
@@ -27,14 +27,13 @@ function Noise() {
             }
             newMap.push(row)
         }
-        perlin.seed()
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
-                let noiseValue = perlin.get(x+0.5, y+0.5)
-                console.log(noiseValue)
+                let noiseValue = (perlin.get((x+0.5)/7, (y+0.5)/7)+1)/2
                 newMap[y][x].noise = noiseValue
             })
         })
+        perlin.seed()
         changeMap(newMap)
     }
 
@@ -64,7 +63,8 @@ function Noise() {
             </div>
             <div className="algobuttons">
                 <select onChange={e => changeRepresentation(e.target.value)}>
-                    <option defaultValue value='Terreno'>Terreno</option>
+                    <option defaultValue value='Estática'>Estática</option>
+                    <option value='Terreno'>Terreno</option>
                     <option value='Mapa topográfico'>Mapa topográfico</option>
                     <option value='Linha 1D'>Linha</option>
                 </select>
