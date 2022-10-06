@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import perlin from '../components/PerlinNoise'
 
 function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
