@@ -8,9 +8,9 @@ function Noise() {
 
     useEffect(() => {
         let newMap = []
-        for(let i=0; i<10; i++){
+        for(let i=0; i<30; i++){
             let row = []
-            for(let y=0; y<30; y++){
+            for(let y=0; y<90; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
@@ -19,10 +19,18 @@ function Noise() {
     }, [])
 
     function perlinNoise(){
-        let newMap = [...map2D]
+        let newMap = []
+        for(let i=0; i<30; i++){
+            let row = []
+            for(let y=0; y<90; y++){
+                row.push({noise:0})
+            }
+            newMap.push(row)
+        }
+        perlin.seed()
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
-                let noiseValue = Math.random()
+                let noiseValue = perlin.get(x+0.5, y+0.5)
                 console.log(noiseValue)
                 newMap[y][x].noise = noiseValue
             })
@@ -43,7 +51,7 @@ function Noise() {
                 </select>
                 <div className="algotitle">{currentAlgo}</div>
             </div>
-            <div className="algomap perlinmap">
+            <div className="perlinmap">
                 {map2D.map((row,y) =>
                     <div key={y}>
                     {row.map((cell,x) => 

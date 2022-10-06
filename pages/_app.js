@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }) {
   return (
   <>
   <Head>
+    <script src='http://joeiddon.github.io/perlin/perlin.js'/>
     <title>Algoritmos</title>
   </Head>
   <div className='pagelayout' data-theme={darkMode?'dark':'light'}>
