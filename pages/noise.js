@@ -9,9 +9,9 @@ function Noise() {
 
     useEffect(() => {
         let newMap = []
-        for(let i=0; i<30; i++){
+        for(let i=0; i<40; i++){
             let row = []
-            for(let y=0; y<90; y++){
+            for(let y=0; y<120; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
@@ -21,17 +21,24 @@ function Noise() {
 
     function perlinNoise(){
         let newMap = []
-        for(let i=0; i<30; i++){
+        for(let i=0; i<40; i++){
             let row = []
-            for(let y=0; y<90; y++){
+            for(let y=0; y<120; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
         }
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
-                let noiseValue = (perlin.get((x+0.5)/7, (y+0.5)/7)+1)/2
-                newMap[y][x].noise = noiseValue
+                // converter range do perlin noise {-sqrt(2)/2, sqrt(2)/2} para {-1,1}
+                let noiseValue = perlin.get((x+0.5)/7, (y+0.5)/7)*1.41
+                let actualValue = noiseValue
+                if(noiseValue<0.6){actualValue = 0.8}
+                if(noiseValue<0.2){actualValue = 0.6}
+                if(noiseValue<-0.2){actualValue = 0.4}
+                if(noiseValue<-0.6){actualValue = 0.2}
+                console.log(noiseValue)
+                newMap[y][x].noise = actualValue
             })
         })
         perlin.seed()
