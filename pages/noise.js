@@ -5,7 +5,6 @@ function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
     const [currentRepresentation, changeRepresentation] = useState('Estática')
     const [map2D, changeMap] = useState([])
-    const [line1D, changeLine] = useState([])
 
     useEffect(() => {
         let newMap = []
@@ -56,8 +55,11 @@ function Noise() {
                 if(noiseValue<0.2){actualValue = 0.5}
                 if(noiseValue<-0.2){actualValue = 0.25}
                 if(noiseValue<-0.6){actualValue = 0}
-                console.log(noiseValue)
                 newMap[y][x].noise = actualValue
+                if(currentRepresentation==='Linha 1D'){
+                    noiseValue = (noiseValue+1)/2
+                    newMap[y][x].noise = noiseValue
+                }
             })
         })
         perlin.seed()
@@ -73,7 +75,14 @@ function Noise() {
                 randomNoise()
                 break
         }
-        
+    }
+
+    function returnString(){
+        let className = ''
+        for(let i=0; i<120; i++){
+            className+= '1fr '
+        }
+        return className
     }
 
     return (
@@ -85,6 +94,7 @@ function Noise() {
                 </select>
                 <div className="algotitle">{currentAlgo}</div>
             </div>
+            {currentRepresentation!=='Linha 1D'?
             <div className="perlinmap">
                 {map2D.map((row,y) =>
                     <div key={y}>
@@ -95,7 +105,13 @@ function Noise() {
                     )}
                     </div>
                 )}
+            </div>:
+            <div className="algobars" style={{gridTemplateColumns:returnString()}}>
+                {map2D[0].map(vertex =>
+                    <div style={{height:String(vertex.noise*100)+'%', backgroundColor:'black'}}></div>
+                )}
             </div>
+            }
             <div className="algobuttons">
                 <select onChange={e => changeRepresentation(e.target.value)}>
                     <option defaultValue value='Estática'>Estática</option>
