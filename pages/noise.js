@@ -16,7 +16,7 @@ function Noise() {
             newMap.push(row)
         }
         changeMap(newMap)
-    }, [])
+    }, [currentRepresentation])
 
     function randomNoise(){
         let newMap = []
