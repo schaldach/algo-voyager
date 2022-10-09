@@ -19,6 +19,24 @@ function Noise() {
         changeMap(newMap)
     }, [])
 
+    function randomNoise(){
+        let newMap = []
+        for(let i=0; i<40; i++){
+            let row = []
+            for(let y=0; y<120; y++){
+                row.push({noise:0})
+            }
+            newMap.push(row)
+        }
+        newMap.forEach((row,y) => {
+            row.forEach((cell,x) => {
+                let noiseValue = Math.random()
+                newMap[y][x].noise = noiseValue
+            })
+        })
+        changeMap(newMap)
+    }
+
     function perlinNoise(){
         let newMap = []
         for(let i=0; i<40; i++){
@@ -33,10 +51,11 @@ function Noise() {
                 // converter range do perlin noise {-sqrt(2)/2, sqrt(2)/2} para {-1,1}
                 let noiseValue = perlin.get((x+0.5)/7, (y+0.5)/7)*1.41
                 let actualValue = noiseValue
-                if(noiseValue<0.6){actualValue = 0.8}
-                if(noiseValue<0.2){actualValue = 0.6}
-                if(noiseValue<-0.2){actualValue = 0.4}
-                if(noiseValue<-0.6){actualValue = 0.2}
+                if(noiseValue<1){actualValue = 1}
+                if(noiseValue<0.6){actualValue = 0.75}
+                if(noiseValue<0.2){actualValue = 0.5}
+                if(noiseValue<-0.2){actualValue = 0.25}
+                if(noiseValue<-0.6){actualValue = 0}
                 console.log(noiseValue)
                 newMap[y][x].noise = actualValue
             })
@@ -46,7 +65,15 @@ function Noise() {
     }
 
     function runAlgorithm(){
-        perlinNoise()
+        switch(currentAlgo){
+            case 'Perlin':
+                perlinNoise()
+                break
+            case 'Random':
+                randomNoise()
+                break
+        }
+        
     }
 
     return (
