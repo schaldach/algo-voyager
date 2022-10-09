@@ -107,8 +107,8 @@ function Noise() {
                 )}
             </div>:
             <div className="algobars" style={{gridTemplateColumns:returnString()}}>
-                {map2D[0].map(vertex =>
-                    <div style={{height:String(vertex.noise*100)+'%', backgroundColor:'black'}}></div>
+                {map2D[0].map((vertex,index) =>
+                    <div key={index} style={{height:String(vertex.noise*100)+'%', backgroundColor:'black'}}></div>
                 )}
             </div>
             }
