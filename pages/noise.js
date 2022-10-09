@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import perlin from "../components/PerlinNoise";
 
 function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
     const [currentRepresentation, changeRepresentation] = useState('Estática')
     const [map2D, changeMap] = useState([])
+    const canvasRef = useRef(null)
+    const staticColors = ['#000000','#444444','#888888','#bbbbbb','#ffffff']
 
     useEffect(() => {
         let newMap = []
-        for(let i=0; i<40; i++){
+        for(let i=0; i<50; i++){
             let row = []
-            for(let y=0; y<120; y++){
+            for(let y=0; y<150; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
@@ -18,11 +20,22 @@ function Noise() {
         changeMap(newMap)
     }, [currentRepresentation])
 
+    useEffect(() => {
+        const canvas = canvasRef.current
+        const context = canvas.getContext('2d')
+        for(let y=0; y<map2D.length; y++){
+            for(let x=0; x<map2D[y].length; x++){
+                context.fillStyle = staticColors[map2D[y][x].noise]
+                context.fillRect(x*2, y*2, 2, 2)
+            }
+        }
+    }, [map2D])
+
     function randomNoise(){
         let newMap = []
-        for(let i=0; i<40; i++){
+        for(let i=0; i<50; i++){
             let row = []
-            for(let y=0; y<120; y++){
+            for(let y=0; y<150; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
@@ -36,11 +49,11 @@ function Noise() {
         changeMap(newMap)
     }
 
-    function perlinNoise(){
+    function perlinNoise2D(){
         let newMap = []
-        for(let i=0; i<40; i++){
+        for(let i=0; i<50; i++){
             let row = []
-            for(let y=0; y<120; y++){
+            for(let y=0; y<150; y++){
                 row.push({noise:0})
             }
             newMap.push(row)
@@ -50,39 +63,31 @@ function Noise() {
                 // converter range do perlin noise {-sqrt(2)/2, sqrt(2)/2} para {-1,1}
                 let noiseValue = perlin.get((x+0.5)/7, (y+0.5)/7)*1.41
                 let actualValue = noiseValue
-                if(noiseValue<1){actualValue = 1}
-                if(noiseValue<0.6){actualValue = 0.75}
-                if(noiseValue<0.2){actualValue = 0.5}
-                if(noiseValue<-0.2){actualValue = 0.25}
+                if(noiseValue<1){actualValue = 4}
+                if(noiseValue<0.6){actualValue = 3}
+                if(noiseValue<0.2){actualValue = 2}
+                if(noiseValue<-0.2){actualValue = 1}
                 if(noiseValue<-0.6){actualValue = 0}
                 newMap[y][x].noise = actualValue
-                if(currentRepresentation==='Linha 1D'){
-                    noiseValue = (noiseValue+1)/2
-                    newMap[y][x].noise = noiseValue
-                }
             })
         })
         perlin.seed()
         changeMap(newMap)
     }
 
+    function perlinNoise1D(){
+
+    }
+
     function runAlgorithm(){
         switch(currentAlgo){
             case 'Perlin':
-                perlinNoise()
+                perlinNoise2D()
                 break
             case 'Random':
                 randomNoise()
                 break
         }
-    }
-
-    function returnString(){
-        let className = ''
-        for(let i=0; i<120; i++){
-            className+= '1fr '
-        }
-        return className
     }
 
     return (
@@ -94,24 +99,7 @@ function Noise() {
                 </select>
                 <div className="algotitle">{currentAlgo}</div>
             </div>
-            {currentRepresentation!=='Linha 1D'?
-            <div className="perlinmap">
-                {map2D.map((row,y) =>
-                    <div key={y}>
-                    {row.map((cell,x) => 
-                        <div key={x}>
-                            <div style={{backgroundColor:'black', filter:`invert(${cell.noise})`}} className="inner-circle"/>
-                        </div>
-                    )}
-                    </div>
-                )}
-            </div>:
-            <div className="algobars" style={{gridTemplateColumns:returnString()}}>
-                {map2D[0].map((vertex,index) =>
-                    <div key={index} style={{height:String(vertex.noise*100)+'%', backgroundColor:'black'}}></div>
-                )}
-            </div>
-            }
+            <canvas className="noisecanvas" ref={canvasRef}></canvas>
             <div className="algobuttons">
                 <select onChange={e => changeRepresentation(e.target.value)}>
                     <option defaultValue value='Estática'>Estática</option>

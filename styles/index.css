@@ -148,16 +148,10 @@ main{
   width: calc(55vh * 3);
   border: 1px solid var(--color2);
 }
-.perlinmap{
-  display: grid;
-  grid-template-rows: repeat(40, 1fr);
-  height: 55vh;
-  width: calc(55vh * 3);
+.noisecanvas{
+  height: 350px;
+  width: 1050px;
   border: 1px solid var(--color2);
-}
-.perlinmap>div{
-  display: grid;
-  grid-template-columns: repeat(120, 1fr);
 }
 .algomap>div{
   display: grid;
