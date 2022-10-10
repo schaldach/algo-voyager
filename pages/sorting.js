@@ -250,7 +250,7 @@ function Sorting() {
         <div className="sorting">
             <div className="titledisplay">
                 <select onChange={e => changeAlgo(e.target.value)}>
-                    <option defaultValue value='Merge Sort'>Merge Sort</option>
+                    <option value='Merge Sort'>Merge Sort</option>
                     <option value='Selection Sort'>Selection Sort</option>
                     <option value='Quick Sort'>Quick Sort</option>
                     <option value='Bubble Sort'>Bubble Sort</option>

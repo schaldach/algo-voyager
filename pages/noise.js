@@ -3,7 +3,7 @@ import perlin from "../components/PerlinNoise";
 
 function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
-    const [currentRepresentation, changeRepresentation] = useState('Estática')
+    const [currentRepresentation, changeRepresentation] = useState('Linha 1D')
     const [map2D, changeMap] = useState([])
     const [line1D, changeLine] = useState([])
     const canvasRef = useRef(null)
@@ -156,10 +156,10 @@ function Noise() {
             <canvas width='1125' height='375' className="noisecanvas" ref={canvasRef}></canvas>
             <div className="algobuttons">
                 <select onChange={e => changeRepresentation(e.target.value)}>
-                    <option defaultValue value='Estática'>Estática</option>
+                    <option value='Linha 1D'>Linha</option>
+                    <option value='Estática'>Estática</option>
                     <option value='Terreno'>Terreno</option>
                     <option value='Mapa topográfico'>Mapa topográfico</option>
-                    <option value='Linha 1D'>Linha</option>
                 </select>
                 <button onClick={runAlgorithm}>Gerar ruído</button>
             </div>

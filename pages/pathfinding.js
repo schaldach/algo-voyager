@@ -258,7 +258,7 @@ function PathFinding() {
         <div className="sorting">
             <div className="titledisplay">
                 <select onChange={e => changeAlgo(e.target.value)}>
-                    <option defaultValue value='Dijkstra'>Dijkstra</option>
+                    <option value='Dijkstra'>Dijkstra</option>
                     <option value='A*'>A*</option>
                 </select>
                 <div className="algotitle">{currentAlgo}</div>
