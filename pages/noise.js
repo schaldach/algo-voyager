@@ -100,7 +100,7 @@ function Noise() {
         newMap.forEach((row,y) => {
             row.forEach((cell,x) => {
                 // converter range do perlin noise {-sqrt(2)/2, sqrt(2)/2} para {-1,1}
-                let noiseValue = perlin.get((x+0.5)/7, (y+0.5)/7)*1.41
+                let noiseValue = perlin.get((x+0.5)/8, (y+0.5)/8)*1.41
                 let actualValue = noiseValue
                 if(noiseValue<1){actualValue = 4}
                 if(noiseValue<0.6){actualValue = 3}
