@@ -107,6 +107,7 @@ main{
 .algobuttons>button{
   background-color: var(--color4);
   color: #ffffff;
+  outline: none;
   font-family: var(--font1);
   font-size: 20px;
   border: none;
@@ -149,8 +150,8 @@ main{
   border: 1px solid var(--color2);
 }
 .noisecanvas{
-  height: 350px;
-  width: 1050px;
+  height: 375px;
+  width: 1125px;
   border: 1px solid var(--color2);
 }
 .algomap>div{
