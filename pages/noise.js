@@ -24,10 +24,31 @@ function Noise() {
     useEffect(() => {
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
-        for(let y=0; y<map2D.length; y++){
-            for(let x=0; x<map2D[y].length; x++){
-                context.fillStyle = staticColors[map2D[y][x].noise]
-                context.fillRect(x*5, y*5, 5, 5)
+        context.fillStyle = '#000000'
+        context.fillRect(0,0,1125,375)
+        if(currentRepresentation==='Mapa topográfico'){
+            context.fillStyle = '#ffffff'
+            for(let i=0; i<map2D.length; i++){
+                for(let j=0; j<map2D[i].length-1; j++){
+                    if(map2D[i][j].noise !== map2D[i][j+1].noise){
+                        context.fillRect(j*5+5, i*5, 1, 5)
+                    }
+                }
+            }
+            for(let i2=0; i2<map2D.length-1; i2++){
+                for(let j2=0; j2<map2D[i2].length; j2++){
+                    if(map2D[i2][j2].noise !== map2D[i2+1][j2].noise){
+                        context.fillRect(j2*5, i2*5+5, 5, 1)
+                    }
+                }
+            }
+        }
+        else{
+            for(let y=0; y<map2D.length; y++){
+                for(let x=0; x<map2D[y].length; x++){
+                    context.fillStyle = staticColors[map2D[y][x].noise]
+                    context.fillRect(x*5, y*5, 5, 5)
+                }
             }
         }
     }, [map2D])
@@ -99,7 +120,7 @@ function Noise() {
             newLine.push({height:0})
         }
         newLine.forEach((vertex, x) => {
-            let noiseValue = perlin.get((x+0.5)/15, 0.5/15)*1.41
+            let noiseValue = perlin.get((x+0.5)/20, 0.5/20)*1.41
             let yPosition = (noiseValue+1)*375/2
             newLine[x].height = yPosition
         })
@@ -158,7 +179,6 @@ function Noise() {
                 <select onChange={e => changeRepresentation(e.target.value)}>
                     <option value='Linha 1D'>Linha</option>
                     <option value='Estática'>Estática</option>
-                    <option value='Terreno'>Terreno</option>
                     <option value='Mapa topográfico'>Mapa topográfico</option>
                 </select>
                 <button onClick={runAlgorithm}>Gerar ruído</button>
