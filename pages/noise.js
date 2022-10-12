@@ -56,19 +56,27 @@ function Noise() {
     useEffect(() => {
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
-        context.fillStyle = '#000000'
-        context.fillRect(0,0,1125,375)
-        context.strokeStyle = '#ffffff'
-        context.lineWidth = 2
-        for(let x=0; x<line1D.length; x++){
-            if(x){
-                context.lineTo(x*3, line1D[x].height)
-                context.stroke()
-            }
-            context.beginPath()
-            context.moveTo(x*3, line1D[x].height)
-        }
+        drawLine(context)
     }, [line1D])
+
+    async function drawLine(context){
+        if(!line1D.length){return}
+        for(let y=0; y<375; y++){
+            context.fillStyle = '#000000'
+            context.fillRect(0,0,1125,375)
+            context.strokeStyle = '#ffffff'
+            context.lineWidth = 2
+            for(let x=0; x<=375; x++){
+                if(x){
+                    context.lineTo(x*3, line1D[x+y].height)
+                    context.stroke()
+                }
+                context.beginPath()
+                context.moveTo(x*3, line1D[x+y].height)
+            }
+            await new Promise(r => setTimeout(r, 20))
+        }
+    }
 
     function randomNoise(){
         let newMap = []
@@ -116,7 +124,7 @@ function Noise() {
 
     function perlinNoise1D(){
         let newLine = []
-        for(let i=0; i<375; i++){
+        for(let i=0; i<750; i++){
             newLine.push({height:0})
         }
         newLine.forEach((vertex, x) => {
@@ -130,7 +138,7 @@ function Noise() {
 
     function random1D(){
         let newLine = []
-        for(let i=0; i<375; i++){
+        for(let i=0; i<750; i++){
             newLine.push({height:0})
         }
         newLine.forEach((vertex, x) => {
