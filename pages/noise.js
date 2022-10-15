@@ -6,6 +6,7 @@ function Noise() {
     const [currentRepresentation, changeRepresentation] = useState('Linha 1D')
     const [map2D, changeMap] = useState([])
     const [line1D, changeLine] = useState([])
+    const [animationRunning, startAnimation] = useState(false)
     const canvasRef = useRef(null)
     const staticColors = ['#000000','#444444','#888888','#bbbbbb','#ffffff']
 
@@ -60,7 +61,8 @@ function Noise() {
     }, [line1D])
 
     async function drawLine(context){
-        if(!line1D.length){return}
+        if(!line1D.length||animationRunning){return}
+        startAnimation(true)
         for(let y=0; y<375; y++){
             context.fillStyle = '#000000'
             context.fillRect(0,0,1125,375)
@@ -76,6 +78,7 @@ function Noise() {
             }
             await new Promise(r => setTimeout(r, 20))
         }
+        startAnimation(false)
     }
 
     function randomNoise(){
@@ -189,7 +192,7 @@ function Noise() {
                     <option value='Estática'>Estática</option>
                     <option value='Mapa topográfico'>Mapa topográfico</option>
                 </select>
-                <button onClick={runAlgorithm}>Gerar ruído</button>
+                <button className={animationRunning?'disabledbutton':''} onClick={runAlgorithm}>Gerar ruído</button>
             </div>
         </div>
     );
