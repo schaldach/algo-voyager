@@ -41,26 +41,44 @@ html,body {
 .navbar{
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 25px;
-  padding: 20px 75px;
+  padding-bottom: 20px;
   color: var(--color1);
 }
 .navbar>.selectednav{
-  border-bottom: 3px solid var(--color5);
+  background-color: var(--color4);
+  color: var(--color3);
 }
 .navbar>div{
   display: grid;
   cursor: pointer;
   place-items: center;
-  padding: 0px 20px;
+  padding: 10px 30px;
   box-sizing: border-box;
   font-size: 25px;
   font-family: var(--font1);
-  border-bottom: 3px solid var(--color2);
+}
+.navbar>div:hover{
+  background-color: var(--color5);
+  color: var(--color3);
 }
 main{
   min-height: calc(100vh - 100px);
+}
+.algorithms{
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.algorithms>div{
+  border: 2px solid var(--color3);
+  border-radius: 25px;
+  padding: 20px;
+  cursor: pointer;
+}
+.algorithms>div:hover{
+  border: 2px solid var(--color4);
 }
 
 .sorting{

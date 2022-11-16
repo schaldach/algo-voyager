@@ -5,15 +5,16 @@ import React, {useState} from 'react'
 
 function MyApp({ Component, pageProps }) {
   const[darkMode, setDark] = useState(false)
+  const[selectedPage, changePage] = useState(null)
   return (
   <>
   <Head>
     <title>Algoritmos</title>
   </Head>
   <div className='pagelayout' data-theme={darkMode?'dark':'light'}>
-    <NavBar/>
+    <NavBar selectedPage={selectedPage} changePage={changePage}/>
     <main>
-      <Component {...pageProps} />
+      <Component changePage={changePage} {...pageProps} />
     </main>
   </div>
   </>)

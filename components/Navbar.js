@@ -2,9 +2,7 @@ import Link from 'next/link'
 import Router from 'next/router';
 import React, {useEffect, useState} from 'react';
 
-function NavBar() {
-    const[selectedPage, changePage] = useState(null)
-
+function NavBar({selectedPage, changePage}) {
     useEffect(() => {
         const router = Router
         let {pathname} = router
