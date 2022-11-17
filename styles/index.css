@@ -63,9 +63,6 @@ html,body {
   background-color: var(--color5);
   color: var(--color3);
 }
-.navbar>div:hover>div{
-  transform: scale(1.1);
-}
 main{
   min-height: calc(100vh - 100px);
 }
