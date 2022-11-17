@@ -11,10 +11,10 @@ function NavBar({selectedPage, changePage}) {
 
     return (
         <div className="navbar">
-            <Link href='/'><div onClick={() => changePage('')} className={selectedPage===''?'selectednav':''}>Introdução</div></Link>
-            <Link href='/sorting'><div onClick={() => changePage('sorting')} className={selectedPage==='sorting'?'selectednav':''}>Sorting</div></Link>
-            <Link href='/pathfinding'><div onClick={() => changePage('pathfinding')} className={selectedPage==='pathfinding'?'selectednav':''}>Path Finding</div></Link>
-            <Link href='/noise'><div onClick={() => changePage('noise')} className={selectedPage==='noise'?'selectednav':''}>Gerador de Ruído</div></Link>
+            <Link href='/'><div onClick={() => changePage('')} className={selectedPage===''?'selectednav':''}><div>Introdução</div></div></Link>
+            <Link href='/sorting'><div onClick={() => changePage('sorting')} className={selectedPage==='sorting'?'selectednav':''}><div>Sorting</div></div></Link>
+            <Link href='/pathfinding'><div onClick={() => changePage('pathfinding')} className={selectedPage==='pathfinding'?'selectednav':''}><div>Path Finding</div></div></Link>
+            <Link href='/noise'><div onClick={() => changePage('noise')} className={selectedPage==='noise'?'selectednav':''}><div>Gerador de Ruído</div></div></Link>
         </div>
     );
 }

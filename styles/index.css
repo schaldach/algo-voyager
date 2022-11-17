@@ -63,6 +63,9 @@ html,body {
   background-color: var(--color5);
   color: var(--color3);
 }
+.navbar>div:hover>div{
+  transform: scale(1.1);
+}
 main{
   min-height: calc(100vh - 100px);
 }
@@ -71,14 +74,26 @@ main{
   justify-content: center;
   gap: 15px;
 }
+.algoimg{
+  height: 165px;
+  width: 270px;
+  position: relative;
+}
 .algorithms>div{
   border: 2px solid var(--color3);
   border-radius: 25px;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 270px;
+  overflow: hidden;
+  place-items: center;
+  grid-template-rows: 165px 50px;
   cursor: pointer;
+  font-size: 20px;
+  border: 2px solid var(--color4);
 }
 .algorithms>div:hover{
-  border: 2px solid var(--color4);
+  background-color: var(--color4);
+  color: #ffffff;
 }
 
 .sorting{
