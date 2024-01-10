@@ -16,7 +16,7 @@ export default class PathFinding3D {
         this.barriersMesh = []
         this.scene = new THREE.Scene()
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/425, 0.01, 1000)
-        this.camera.position.set(10, 20, 0)
+        this.camera.position.set(10, 12.5, 0)
 
         this.targetMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xff0000 }))
         this.startMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xffff00 }))
