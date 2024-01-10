@@ -32,6 +32,10 @@ html,body {
   background-color: var(--color3);
 }
 
+.screenCanvas{
+  cursor: pointer;
+}
+
 .pagelayout{
   display: grid;
   grid-template-rows: auto 1fr;

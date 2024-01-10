@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-
+import PathFindingVisualizer from "../components/PathFindingVisualizer";
 
 function PathFinding() {
     const [currentAlgo, changeAlgo] = useState('Dijkstra')
@@ -263,20 +263,7 @@ function PathFinding() {
                 </select>
                 <div className="algotitle">{currentAlgo}</div>
             </div>
-            <div className="algomap">
-                {mapGrid.map((row,y) =>
-                    <div key={y}>
-                    {row.map((cell,x) => 
-                        <div onClick={() => changeCell({y:y, x:x})}
-                        onMouseEnter={() => {if(mouseClicked){changeCell({y:y, x:x})}}} 
-                        key={x}>
-                            <div className={cell.state === 'filled'&&!cell.target?'color-transition inner-circle':'inner-circle'}
-                            style={{backgroundColor:cell.target?'red':cell.start?'yellow':cell.state==='blocked'?'black':cell.state==='empty'?'white':`rgb(${Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240},30,240)`}} />
-                        </div>
-                    )}
-                    </div>
-                )}
-            </div>
+            <PathFindingVisualizer changeCell={changeCell} mapGrid={mapGrid}/>
             <div className="algobuttons">
                 <button className={blockAlgorithm||animationBlock?'disabledbutton':''} onClick={runAlgorithm}>Navegar</button>
                 <button className={animationRunning||animationBlock?'disabledbutton':''} onClick={() => drawMap(false)}>Limpar caminho</button>
