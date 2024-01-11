@@ -70,9 +70,11 @@ export default class PathFinding3D {
             window.requestAnimationFrame(animate);
             this.controls.update()
             this.renderer.render(this.scene, this.camera)
-            this.barriersMesh.forEach(barrierMesh => {
-                if(barrierMesh.wallMesh.position.y>-0.25){
-                    barrierMesh.wallMesh.position.y -= 0.25
+            
+            const interactableObjects = [...this.barriersMesh.map(obj => obj.wallMesh), this.startMesh, this.targetMesh] 
+            interactableObjects.forEach(mesh => {
+                if(mesh.position.y>0){
+                    mesh.position.y -= 0.2
                 }
             })
         }
@@ -133,8 +135,12 @@ export default class PathFinding3D {
                     newMaterial.color.set(color)
                     lineMesh.material.copy(newMaterial)
                 }
-                if (cell.target) this.targetMesh.position.set(-worldPosition.x, 0, worldPosition.z)
-                if (cell.start) this.startMesh.position.set(-worldPosition.x, 0, worldPosition.z)
+                if (cell.target && (this.targetMesh.position.x !== -worldPosition.x || this.targetMesh.position.z !== worldPosition.z)) {
+                    this.targetMesh.position.set(-worldPosition.x, 1, worldPosition.z)
+                }
+                if (cell.start && (this.startMesh.position.x !== -worldPosition.x || this.startMesh.position.z !== worldPosition.z)) {
+                    this.startMesh.position.set(-worldPosition.x, 1, worldPosition.z)
+                }
                 if (cell.state === 'blocked') {
                     allBarriersLength++
                     if (!this.barrierExists(i, j)) {
