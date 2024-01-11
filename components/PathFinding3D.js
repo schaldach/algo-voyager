@@ -10,12 +10,15 @@ export default class PathFinding3D {
             antialias: true,
             preserveDrawingBuffer: true,
         })
-        this.renderer.setSize(window.innerWidth, 425)
+        this.renderer.setSize(window.innerWidth, window.innerHeight)
         
+        this.redArray = []
+        this.generateRedArray()
+
         this.linesMesh = []
         this.barriersMesh = []
         this.scene = new THREE.Scene()
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/425, 0.01, 1000)
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000)
         this.camera.position.set(10, 12.5, 0)
 
         this.targetMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xff0000 }))
@@ -67,6 +70,11 @@ export default class PathFinding3D {
             window.requestAnimationFrame(animate);
             this.controls.update()
             this.renderer.render(this.scene, this.camera)
+            this.barriersMesh.forEach(barrierMesh => {
+                if(barrierMesh.wallMesh.position.y>-0.25){
+                    barrierMesh.wallMesh.position.y -= 0.25
+                }
+            })
         }
         animate()
     }
@@ -89,6 +97,21 @@ export default class PathFinding3D {
         }
         return false
     }
+    generateRedArray(){
+        let currentNumber = 0
+        for(let i=0;i<9;i++){
+            this.redArray.push(currentNumber)
+            currentNumber+=25
+        }
+        for(let i=0;i<9;i++){
+            this.redArray.push(currentNumber)
+            currentNumber-=25
+        }
+    }
+    calculateRedComponent(cell) {
+        return this.redArray[cell['shortestPath'].length%this.redArray.length];
+    }
+      
     updateMap(mapGrid) {
         let newBarriers = []
         let allBarriersLength = 0
@@ -99,7 +122,7 @@ export default class PathFinding3D {
                 const worldPosition = { x: i - mapGrid.length / 2, z: j - row.length / 2 }
                 const lineMesh = this.linesMesh[i*row.length+j].children[0]
                 if(cell.state === 'filled' && lineMesh.material.color.getHexString() === 'ffffff'){
-                    const color = new THREE.Color(`rgb(${Math.round(Math.abs(Math.sin(cell['shortestPath'].length*Math.PI/20))*240)},30,240)`)
+                    const color = new THREE.Color(`rgb(${this.calculateRedComponent(cell)},30,240)`)
                     const newMaterial = lineMesh.material.clone()
                     newMaterial.color.set(color)
                     lineMesh.material.copy(newMaterial)
@@ -116,7 +139,7 @@ export default class PathFinding3D {
                     allBarriersLength++
                     if (!this.barrierExists(i, j)) {
                         const wallMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), new THREE.MeshStandardMaterial({ color: 0x000000 }))
-                        wallMesh.position.set(-worldPosition.x, -0.25, worldPosition.z)
+                        wallMesh.position.set(-worldPosition.x, 1, worldPosition.z)
                         newBarriers.push({ wallMesh, y: i, x: j })
                     }
                 }

@@ -34,6 +34,9 @@ html,body {
 
 .screenCanvas{
   cursor: pointer;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .pagelayout{
@@ -48,6 +51,7 @@ html,body {
   justify-content: center;
   align-items: center;
   padding-bottom: 20px;
+  z-index: 1;
   color: var(--color1);
 }
 .navbar>.selectednav{
@@ -98,13 +102,14 @@ main{
 }
 
 .sorting{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  justify-content: center;
   gap: 12px;
   height: 100%;
   box-sizing: border-box;
   padding-bottom: 25px;
+  background: none;
 }
 .algobuttons>input{
   font-family: var(--font1);
@@ -121,6 +126,9 @@ main{
 .algotitle{
   font-family: var(--font1);
   font-size: 30px;
+  border: none;
+  outline: none;
+  background: none;
 }
 .algobars{
   height: 60vh;
@@ -133,9 +141,8 @@ main{
 }
 .algobuttons{
   display: flex;
-  width: 90vw;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-self: end;
+  z-index: 1;
   gap: 25px;
 }
 .algobuttons>button{
@@ -162,8 +169,10 @@ main{
   font-family: var(--font1);
 }
 .titledisplay{
-  display: flex;
-  gap: 20px;
+  z-index: 1;
+  width: fit-content;
+  justify-self: center;
+  align-self: start;
 }
 .homescreen{
   font-family: var(--font1);
@@ -213,6 +222,9 @@ main{
   font-family: var(--font1);
   color: var(--color4);
   font-size: 22px;
+  width: fit-content;
+  justify-self: center;
+  z-index: 1;
 }
 .maperror{
   color: var(--color6);

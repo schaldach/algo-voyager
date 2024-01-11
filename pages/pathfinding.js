@@ -257,11 +257,10 @@ function PathFinding() {
     return (
         <div className="sorting">
             <div className="titledisplay">
-                <select onChange={e => changeAlgo(e.target.value)}>
+                <select className="algotitle" onChange={e => changeAlgo(e.target.value)}>
                     <option value='Dijkstra'>Dijkstra</option>
                     <option value='A*'>A*</option>
                 </select>
-                <div className="algotitle">{currentAlgo}</div>
             </div>
             <PathFindingVisualizer changeCell={changeCell} mapGrid={mapGrid}/>
             <div className="algobuttons">
