@@ -179,11 +179,10 @@ function Noise() {
     return (
         <div className="sorting">
             <div className="titledisplay">
-                <select onChange={e => changeAlgo(e.target.value)}>
+                <select className="algotitle" onChange={e => changeAlgo(e.target.value)}>
                     <option defaultValue value='Perlin'>Perlin</option>
                     <option value='Random'>Random</option>
                 </select>
-                <div className="algotitle">{currentAlgo}</div>
             </div>
             <canvas width='1125' height='375' className="noisecanvas" ref={canvasRef}></canvas>
             <div className="algobuttons">

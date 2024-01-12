@@ -1,6 +1,12 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+const heightNumber = {
+    square: 0.5,
+    barrier: 0.25,
+    line: 0
+}
+
 export default class PathFinding3D {
     constructor(canvasRef) {
         this.canvasRef = canvasRef.current
@@ -22,7 +28,9 @@ export default class PathFinding3D {
         this.camera.position.set(10, 12.5, 0)
 
         this.targetMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xff0000 }))
+        this.targetMesh.name = 'square'
         this.startMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xffff00 }))
+        this.startMesh.name = 'square'
 
         this.scene.add(this.targetMesh, this.startMesh)
         this.scene.background = new THREE.Color(0xffffff)
@@ -32,7 +40,7 @@ export default class PathFinding3D {
     }
     getLineMesh(y,x){
         const lineMesh = new THREE.Group()
-        lineMesh.position.y = -0.5
+        lineMesh.name = 'line'
         const squareMesh = new THREE.Mesh(new THREE.BoxGeometry(0.975, 0.01, 0.975), new THREE.MeshStandardMaterial({ color: 0xffffff }))
         squareMesh.name = 'rect'
         squareMesh.x = x
@@ -71,10 +79,13 @@ export default class PathFinding3D {
             this.controls.update()
             this.renderer.render(this.scene, this.camera)
             
-            const interactableObjects = [...this.barriersMesh.map(obj => obj.wallMesh), this.startMesh, this.targetMesh] 
+            const interactableObjects = [...this.barriersMesh.map(obj => obj.wallMesh), this.startMesh, this.targetMesh, ...this.linesMesh] 
             interactableObjects.forEach(mesh => {
-                if(mesh.position.y>0){
-                    mesh.position.y -= 0.2
+                if(mesh.position && mesh.position.y>heightNumber[mesh.name]){
+                    mesh.position.y -= 0.05
+                    if(mesh.position.y<heightNumber[mesh.name]){
+                        mesh.position.y = heightNumber[mesh.name]
+                    }
                 }
             })
         }
@@ -86,7 +97,7 @@ export default class PathFinding3D {
             for (let j = 0; j < row.length; j++) {
                 const worldPosition = { x: i - mapGrid.length / 2, z: j - row.length / 2 }
                 const line = this.getLineMesh(i, j)
-                line.position.set(-worldPosition.x, -0.5, worldPosition.z)
+                line.position.set(-worldPosition.x, 0, worldPosition.z)
                 this.linesMesh.push(line)
             }
         }
@@ -128,8 +139,9 @@ export default class PathFinding3D {
                     const newMaterial = lineMesh.material.clone()
                     newMaterial.color.set(color)
                     lineMesh.material.copy(newMaterial)
+                    lineMesh.parent.position.y = 0.35
                 }
-                else if(cell.state === 'empty'){
+                else if(cell.state === 'empty' && lineMesh.material.color.getHexString() !== 'ffffff'){
                     const color = new THREE.Color(0xffffff)
                     const newMaterial = lineMesh.material.clone()
                     newMaterial.color.set(color)
@@ -145,6 +157,7 @@ export default class PathFinding3D {
                     allBarriersLength++
                     if (!this.barrierExists(i, j)) {
                         const wallMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), new THREE.MeshStandardMaterial({ color: 0x000000 }))
+                        wallMesh.name = 'barrier'
                         wallMesh.position.set(-worldPosition.x, 1, worldPosition.z)
                         newBarriers.push({ wallMesh, y: i, x: j })
                     }
