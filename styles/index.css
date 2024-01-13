@@ -192,7 +192,7 @@ main {
   font-size: 35px;
   color: var(--color1);
   height: 100%;
-  padding: 115px 50px 50px 50px;
+  padding: 100px 50px 50px 50px;
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
