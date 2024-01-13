@@ -10,6 +10,8 @@
   --color7: #a51633;
   --color8: #c1ff1c;
   --color9: #58bb43;
+  --color10: #8e2de2;
+  --color11: #440c85;
   --font1: "Poppins", sans-serif;
 }
 [data-theme="dark"] {
@@ -22,6 +24,8 @@
   --color7: #a51633;
   --color8: #c1ff1c;
   --color9: #58bb43;
+  --color10: #0aa1dd;
+  --color11: #2155cd;
   --font1: "Poppins", sans-serif;
 }
 
@@ -44,12 +48,15 @@ body {
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 100vw;
+  height: 100vh;
+  width: 100vw;
 }
 
 .navbar {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  box-sizing: border-box;
   align-items: center;
   z-index: 1;
   color: var(--color1);
@@ -74,7 +81,7 @@ body {
   color: var(--color5);
 }
 main {
-  min-height: calc(100vh - 100px);
+  height: 100%;
 }
 .algorithms {
   display: flex;
@@ -185,11 +192,49 @@ main {
   font-size: 35px;
   color: var(--color1);
   height: 100%;
-  padding: 25px;
+  padding: 115px 50px 50px 50px;
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(to bottom, #fff, #eee);
   gap: 25px;
+  width: 100%;
+}
+.maintitle{
+  font-size: 90px;
+  color: var(--color4);
+}
+.maintitle > .color1{
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  background-image: linear-gradient(to right,var(--color4), var(--color5));
+}
+.maintitle > .color2{
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right,var(--color10), var(--color11));
+}
+.maindescription{
+  text-align: center;
+}
+.maininfo{
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  font-size: 25px;
+}
+.maininfo div{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  width: fit-content;
+}
+.maininfo div:hover{
+  border-bottom: 2px solid var(--color10);
 }
 .algomap {
   display: grid;
