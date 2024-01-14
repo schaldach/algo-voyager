@@ -71,7 +71,7 @@ body {
   box-sizing: border-box;
   font-size: 25px;
   font-family: var(--font1);
-  border-bottom: 2px solid #fff;
+  border-bottom: 2px solid transparent;
 }
 .navbar > .selectednav {
   color: var(--color4);
