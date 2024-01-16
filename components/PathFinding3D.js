@@ -20,6 +20,7 @@ export default class PathFinding3D {
         
         this.redArray = []
         this.generateRedArray()
+        this.stopAnimation = false
 
         this.linesMesh = []
         this.barriersMesh = []
@@ -37,6 +38,12 @@ export default class PathFinding3D {
         this.scene.add(new THREE.AmbientLight(0xffffff, 10))
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.startAnimation()
+    }
+    clearScene(){
+        this.barriersMesh = []
+        this.linesMesh = []
+        this.redArray = []
+        this.stopAnimation = true
     }
     getLineMesh(y,x){
         const lineMesh = new THREE.Group()
@@ -75,7 +82,9 @@ export default class PathFinding3D {
     }
     startAnimation() {
         const animate = () => {
-            window.requestAnimationFrame(animate);
+            if(!this.stopAnimation){
+                window.requestAnimationFrame(animate);
+            }
             this.controls.update()
             this.renderer.render(this.scene, this.camera)
             

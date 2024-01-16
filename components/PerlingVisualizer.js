@@ -6,8 +6,13 @@ function PerlinVisualizer({ mapGrid }) {
     const [scene, setScene] = useState()
 
     useEffect(() => {
-        const scene3D = new Perlin3D(canvasRef)
+        let scene3D = new Perlin3D(canvasRef)
         setScene(scene3D)
+
+        return () => {
+            scene3D.clearScene()
+            scene3D = {}
+        };
     }, [])
 
     useEffect(() => {

@@ -7,8 +7,13 @@ function PathFindingVisualizer({ mapGrid, changeCell }) {
     const [firstDraw, setFirstDraw] = useState(false)
 
     useEffect(() => {
-        const scene3D = new PathFinding3D(canvasRef)
+        let scene3D = new PathFinding3D(canvasRef)
         setScene(scene3D)
+
+        return () => {
+            scene3D.clearScene()
+            scene3D = {}
+        };
     }, [])
 
     useEffect(() => {

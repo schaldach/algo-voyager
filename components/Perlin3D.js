@@ -11,6 +11,7 @@ export default class Perlin3D {
             preserveDrawingBuffer: true,
         })
         this.renderer.setSize(window.innerWidth, window.innerHeight)
+        this.stopAnimation = false
 
         this.terrainLines = []
         this.scene = new THREE.Scene()
@@ -22,9 +23,15 @@ export default class Perlin3D {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.startAnimation()
     }
+    clearScene(){
+        this.terrainLines = []
+        this.stopAnimation = true
+    }
     startAnimation() {
         const animate = () => {
-            window.requestAnimationFrame(animate);
+            if(!this.stopAnimation){
+                window.requestAnimationFrame(animate);
+            }
             this.controls.update()
             this.renderer.render(this.scene, this.camera)
         }
