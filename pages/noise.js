@@ -85,7 +85,7 @@ function Noise() {
                     //     <option value='Mapa topográfico'>Mapa topográfico</option>
                     // </select>
                 }
-                <button onClick={runAlgorithm}>Gerar ruído</button>
+                <button onClick={runAlgorithm}>Generate noise</button>
             </div>
         </div>
     );

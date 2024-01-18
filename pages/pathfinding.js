@@ -265,17 +265,17 @@ function PathFinding() {
             <PathFindingVisualizer changeCell={changeCell} mapGrid={mapGrid} />
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent:'end', gap: '10px', alignItems:'center' }}>
                 <div className="algobuttons">
-                    <button className={blockAlgorithm || animationBlock ? 'disabledbutton' : ''} onClick={runAlgorithm}>Navegar</button>
-                    <button className={animationRunning || animationBlock ? 'disabledbutton' : ''} onClick={() => drawMap(false)}>Limpar caminho</button>
-                    <button className={!animationRunning || animationBlock ? 'disabledbutton' : ''} onClick={() => { if (animationRunning && !animationBlock) { stopAnimation(true); setTimeout(() => { startAnimation(false); stopAnimation(false) }, 500) } }}>Resetar</button>
+                    <button className={blockAlgorithm || animationBlock ? 'disabledbutton' : ''} onClick={runAlgorithm}>Find optimal path</button>
+                    <button className={animationRunning || animationBlock ? 'disabledbutton' : ''} onClick={() => drawMap(false)}>Clear path</button>
+                    <button className={!animationRunning || animationBlock ? 'disabledbutton' : ''} onClick={() => { if (animationRunning && !animationBlock) { stopAnimation(true); setTimeout(() => { startAnimation(false); stopAnimation(false) }, 500) } }}>Reset</button>
                     <select onChange={e => changeObject(e.target.value)}>
-                        <option defaultValue value='barrier'>Barreira</option>
+                        <option defaultValue value='barrier'>Barrier</option>
                         <option value='start'>Start</option>
                         <option value='target'>Target</option>
                     </select>
                     <br />
                 </div>
-                <div className={error === 0 ? "mapstatus maperror" : 'mapstatus'}>{error === 0 ? 'O caminho não foi achado.' : error === 1 ? 'Caminho achado com sucesso.' : ''}</div>
+                <div className={error === 0 ? "mapstatus maperror" : 'mapstatus'}>{error === 0 ? "The path wasn't found." : error === 1 ? 'Path found with success.' : ''}</div>
             </div>
         </div>
     );
