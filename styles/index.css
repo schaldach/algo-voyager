@@ -37,6 +37,13 @@ body {
   background-color: var(--color3);
 }
 
+.input-marked {
+  background: var(--color4);
+}
+.input-unmarked {
+  background: var(--color6);
+}
+
 .screenCanvas {
   cursor: pointer;
   position: fixed;

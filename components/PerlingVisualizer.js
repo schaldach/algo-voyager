@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Perlin3D from "./Perlin3D";
 
-function PerlinVisualizer({ mapGrid }) {
+function PerlinVisualizer({ mapGrid, hasTerrain, hasLines }) {
     const canvasRef = useRef()
     const [scene, setScene] = useState()
 
@@ -17,9 +17,9 @@ function PerlinVisualizer({ mapGrid }) {
 
     useEffect(() => {
         if (mapGrid.length) {
-            scene.drawMap(mapGrid)
+            scene.drawMap(mapGrid, hasTerrain, hasLines)
         }
-    }, [mapGrid])
+    }, [mapGrid, hasTerrain, hasLines])
 
     return (
         <canvas className="screenCanvas" ref={canvasRef}></canvas>

@@ -4,20 +4,9 @@ import PerlinVisualizer from "../components/PerlingVisualizer";
 
 function Noise() {
     const [currentAlgo, changeAlgo] = useState('Perlin')
-    // const [currentRepresentation, changeRepresentation] = useState('Linha 1D')
     const [mapGrid, changeMap] = useState([])
-
-    // useEffect(() => {
-    //     let newMap = []
-    //     for (let i = 0; i < 125; i++) {
-    //         let row = []
-    //         for (let y = 0; y < 375; y++) {
-    //             row.push({ noise: 0 })
-    //         }
-    //         newMap.push(row)
-    //     }
-    //     changeMap(newMap)
-    // }, [currentRepresentation])
+    const [hasLines, changeLines] = useState(false)
+    const [hasTerrain, changeTerrain] = useState(true)
 
     function randomNoise() {
         let newMap = []
@@ -30,7 +19,7 @@ function Noise() {
         }
         newMap.forEach((row, y) => {
             row.forEach((cell, x) => {
-                let noiseValue = Math.floor(Math.random() * 5)
+                let noiseValue = (Math.random()*2)-1
                 newMap[y][x].noise = noiseValue
             })
         })
@@ -49,7 +38,7 @@ function Noise() {
         newMap.forEach((row, y) => {
             row.forEach((cell, x) => {
                 // converter range do perlin noise {-sqrt(2)/2, sqrt(2)/2} para {-1,1}
-                let noiseValue = perlin.get((x + 0.5) / 12, (y + 0.5) / 12) * 1.41
+                let noiseValue = perlin.get((x + 0.5) / 10, (y + 0.5) / 10) *1.414
                 newMap[y][x].noise = noiseValue
             })
         })
@@ -76,15 +65,10 @@ function Noise() {
                     <option value='Random'>Random</option>
                 </select>
             </div>
-            <PerlinVisualizer mapGrid={mapGrid}/>
+            <PerlinVisualizer mapGrid={mapGrid} hasLines={hasLines} hasTerrain={hasTerrain}/>
             <div className="algobuttons">
-                {
-                    // <select onChange={e => changeRepresentation(e.target.value)}>
-                    //     <option value='Linha 1D'>Linha</option>
-                    //     <option value='Estática'>Estática</option>
-                    //     <option value='Mapa topográfico'>Mapa topográfico</option>
-                    // </select>
-                }
+                <button style={{background: hasLines ? '#0aa1dd':'#d2042d'}} onClick={() => changeLines(!hasLines)}>Lines</button>
+                <button style={{background: hasTerrain ? '#0aa1dd':'#d2042d'}} onClick={() => changeTerrain(!hasTerrain)}>Terrain</button>
                 <button onClick={runAlgorithm}>Generate noise</button>
             </div>
         </div>
