@@ -64,7 +64,7 @@ export default class Perlin3D {
                     vertices[index + 2] = z;
 
                     const color = new THREE.Color();
-                    color.setRGB((cell.noise+1)/2, 0, (cell.noise*-1+1)/2);
+                    color.setRGB(Math.max(cell.noise,0), 1-Math.abs(cell.noise), Math.max(cell.noise*-1,0));
                     colors[index] = color.r;
                     colors[index + 1] = color.g;
                     colors[index + 2] = color.b;
